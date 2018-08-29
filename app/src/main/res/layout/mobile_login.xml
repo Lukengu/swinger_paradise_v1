@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="300dp"
+        android:layout_height="150dp"
+        tools:context=".MobileLogin"
+        android:background="@drawable/register_bg"
+        android:orientation="vertical"
+        android:padding="9dp"
+        android:gravity="right">
+
+        <Spinner
+            android:id="@+id/country"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:spinnerMode="dropdown"
+
+            />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <EditText android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:id="@+id/country_code"
+                android:hint="Code"
+                android:inputType="phone"
+                android:maxLength="4"
+                style="@style/SwingersEditTextStyle"
+                android:clickable="false"
+                android:cursorVisible="false"
+                android:focusable="false"
+                android:focusableInTouchMode="false"
+                />
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Please enter your mobile  number "
+                android:inputType="phone"
+                android:id="@+id/mobile_number"
+                style="@style/SwingersEditTextStyle"/>
+
+
+
+
+        </LinearLayout>
+
+
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="25dp"
+            android:text="CHECK"
+            android:layout_marginTop="9dp"
+            style="@style/SwingersButtonStyle"
+            android:onClick="verify"
+            />
+
+
+    </LinearLayout>
+
+

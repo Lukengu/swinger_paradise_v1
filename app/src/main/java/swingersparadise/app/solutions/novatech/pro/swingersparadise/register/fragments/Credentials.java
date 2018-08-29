@@ -54,7 +54,7 @@ public class Credentials extends Fragment implements SetErrorListener {
         ArrayList<Country> countries = new ArrayList<>();
         countries.addAll(countryList);
 
-        CountryItemsAdapter adapter = new CountryItemsAdapter(getActivity().getApplicationContext(), countries, false);
+        CountryItemsAdapter adapter = new CountryItemsAdapter(getActivity().getApplicationContext(), countries, true);
         country.setAdapter(adapter);
 
 
@@ -227,7 +227,7 @@ public class Credentials extends Fragment implements SetErrorListener {
             conf_password.setError("You must confirm the password");
 
         if(!spref.contains("mobile_number"))
-            mobile_number.setError("Nibile Number Missing");
+            mobile_number.setError("Mobile Number Missing");
 
     }
 

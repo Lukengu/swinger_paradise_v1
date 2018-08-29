@@ -58,6 +58,7 @@ import com.twitter.sdk.android.core.TwitterException;
 import com.twitter.sdk.android.core.TwitterSession;
 import com.twitter.sdk.android.core.identity.TwitterLoginButton;
 import com.twitter.sdk.android.core.models.User;
+import com.pusher.pushnotifications.PushNotifications;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -66,6 +67,8 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Arrays;
+import java.util.Iterator;
+import java.util.Set;
 
 import retrofit2.Call;
 import swingersparadise.app.solutions.novatech.pro.swingersparadise.utils.BitmapUtils;
@@ -87,6 +90,7 @@ public class Login extends Activity {
     private static final int RC_SIGN_IN = 9001;
     private static final int RC_FACEBOOK_SIGNIN = 64206;
     private static final int RC_TWITTER = 140;
+    private static final int RC_MOBILE_SIGNIN=11111;
     private TwitterLoginButton mLoginButton;
 
 
@@ -97,6 +101,8 @@ public class Login extends Activity {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         super.onCreate(savedInstanceState);
+
+
         //Twitter
         TwitterAuthConfig authConfig =  new TwitterAuthConfig(
                 getString(R.string.com_twitter_sdk_android_CONSUMER_KEY),
@@ -199,6 +205,20 @@ public class Login extends Activity {
                 .requestEmail()
                 .build();
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
+
+
+
+
+
+        PushNotifications.start(this, "d0b707e2-0a66-45ec-9491-6c1b3fdd25fc");
+        PushNotifications.subscribe("swingers_notifications");
+
+        Set<String> subscriptions =  PushNotifications.getSubscriptions();
+        Iterator<String> iterator = subscriptions.iterator();
+        while(iterator.hasNext()) {
+
+            Log.e("SUB", (String) iterator.next() );
+        }
 
     }
 
@@ -458,6 +478,8 @@ public class Login extends Activity {
         super.onStart();
        // FirebaseUser currentUser = mAuth.getCurrentUser();
         mAuth.addAuthStateListener(authStateListener);
+
+
         //updateUI(currentUser);
     }
 
@@ -490,5 +512,9 @@ public class Login extends Activity {
 
     public void twitter_signin(View view) {
         mLoginButton.performClick();
+    }
+
+    public void mobile_signin(View view) {
+        startActivityForResult(new Intent(Login.this, MobileLogin.class), RC_MOBILE_SIGNIN);
     }
 }

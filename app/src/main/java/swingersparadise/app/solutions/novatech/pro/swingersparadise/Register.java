@@ -80,7 +80,7 @@ public class Register extends AppCompatActivity {
         };
         setTitle("Register");
 
-      /*  viewPager = findViewById(R.id.viewPager);
+        viewPager = findViewById(R.id.viewPager);
         page_1 = findViewById(R.id.page_1);
         page_2 = findViewById(R.id.page_2);
         page_3 = findViewById(R.id.page_3);
@@ -94,10 +94,15 @@ public class Register extends AppCompatActivity {
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int i, float v, int i1) {
-                if(i == 1 && !validateNext()) {
-                    viewPager.setCurrentItem(0, true);
-                    ((Credentials) adapter.getItem(0)).setError();
+
+
+
+                if( viewPager.getCurrentItem() == 1 && !validateNext()) {
+
+                    Toast.makeText(Register.this, "Not validated", Toast.LENGTH_LONG).show();
+
                 }
+
             }
 
             @Override
@@ -128,6 +133,13 @@ public class Register extends AppCompatActivity {
                 } else {
                     btn_next.setText("Next");
                 }
+
+               
+
+                if(!validateNext() && i == 1) {
+                    viewPager.setCurrentItem(0, true);
+                    ((Credentials) adapter.getItem(0)).setError();
+                }
             }
 
             @Override
@@ -150,8 +162,8 @@ public class Register extends AppCompatActivity {
         storage = FirebaseStorage.getInstance();
         storageReference =  storage.getReference();
 
-        firebaseAuth = FirebaseAuth.getInstance();
-        authStateListener = new FirebaseAuth.AuthStateListener() {
+        mAuth = FirebaseAuth.getInstance();
+       /* authStateListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
@@ -162,8 +174,8 @@ public class Register extends AppCompatActivity {
 
 
             }
-        };
-        */
+        };*/
+
 
     }
     protected  View.OnClickListener next= new View.OnClickListener() {
@@ -224,11 +236,14 @@ public class Register extends AppCompatActivity {
     }
 
     protected boolean validateNext(){
-        if(position == 0)
-            return (spref.contains("display_name") && spref.contains("email_address") && spref.contains("password") && spref.contains("conf_password") && spref.contains("mobile_number"));
-
         if(position == 1)
-            return spref.contains("gender");
+            return (spref.contains("display_name") &&
+                    spref.contains("email_address") &&
+                    spref.contains("password") &&
+                    spref.contains("conf_password") &&
+                    spref.contains("mobile_number"));
+
+
 
         return true;
     }

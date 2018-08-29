@@ -22,7 +22,7 @@
         android:scaleType="fitXY"
         />
 
-    <swingersparadise.app.solutions.novatech.pro.swingersparadise.ui.control.MultiSelectionSpinner
+    <swingersparadise.app.solutions.novatech.pro.swingersparadise.ui.MultiSelectionSpinner
         android:id="@+id/sexual_preferences"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />

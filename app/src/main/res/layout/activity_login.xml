@@ -155,7 +155,7 @@
             android:layout_width="match_parent"
             android:background="@drawable/primary_btn"
             android:text="LOGIN WITH YOUR MOBILE NUMBER"
-            android:onClick="google_signin"
+            android:onClick="mobile_signin"
             />
 
 

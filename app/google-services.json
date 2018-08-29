@@ -23,6 +23,14 @@
           }
         },
         {
+          "client_id": "686511134534-2noivcgk9mpp2dps5opo05ibev1tn5nm.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "swingersparadise.app.solutions.novatech.pro.swingersparadise",
+            "certificate_hash": "631cdc95bde77b269925003ecb2ddc221180c15e"
+          }
+        },
+        {
           "client_id": "686511134534-uo1os349t22c5d41vscqbcjj05pmr599.apps.googleusercontent.com",
           "client_type": 3
         }
@@ -40,7 +48,7 @@
           "status": 2,
           "other_platform_oauth_client": [
             {
-              "client_id": "686511134534-uo1os349t22c5d41vscqbcjj05pmr599.apps.googleusercontent.com",
+              "client_id": "686511134534-hpqp9movuq6j54h2jos15iamfo3q23k5.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
