@@ -13,7 +13,6 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.text.Html;
 import android.text.TextUtils;
-import android.text.method.LinkMovementMethod;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
@@ -159,6 +158,16 @@ public class Login extends Activity {
 
         String text = "Don't have a account yet . Please <a href=\"app://register\">Register</a>";
         String reset = "<a href=\"app://reset_password\">Forgot</a> Password?";
+
+
+
+
+
+
+          PushNotifications.start(this, getString(R.string.pusher_instance_id));
+          PushNotifications.subscribe(getString(R.string.pusher_channel));
+
+
         mAuth = FirebaseAuth.getInstance();
 
         authStateListener = new FirebaseAuth.AuthStateListener() {
@@ -226,8 +235,7 @@ public class Login extends Activity {
 
 
 
-        PushNotifications.start(this, "d0b707e2-0a66-45ec-9491-6c1b3fdd25fc");
-        PushNotifications.subscribe("swingers_notifications");
+
 
         Set<String> subscriptions =  PushNotifications.getSubscriptions();
         Iterator<String> iterator = subscriptions.iterator();
@@ -235,6 +243,21 @@ public class Login extends Activity {
 
             Log.e("SUB", (String) iterator.next() );
         }
+
+    }
+
+    protected void onResume() {
+        super.onResume();
+     /*   PushNotifications.setOnMessageReceivedListenerForVisibleActivity(this, new PushNotificationReceivedListener() {
+            @Override
+            public void onMessageReceived(RemoteMessage remoteMessage) {
+                Log.i("MainActivity", "A remote message was received while this activity is visible!");
+                Map<String, String> params = remoteMessage.getData();
+                JSONObject object = new JSONObject(params);
+                Log.e("JSON_OBJECT", object.toString());
+
+            }
+        });*/
 
     }
 

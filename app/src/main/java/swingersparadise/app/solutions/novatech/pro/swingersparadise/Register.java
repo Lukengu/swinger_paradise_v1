@@ -12,8 +12,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -325,7 +323,7 @@ public class Register extends AppCompatActivity {
                                         editor.remove("password").commit();
                                         editor.remove("conf_password").commit();
 
-                                        startActivity(new Intent(Register.this, Content.class));
+                                        startActivity(new Intent(Register.this, ContentOLD.class));
                                         finish();
                                     }
                                 })

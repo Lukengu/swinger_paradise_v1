@@ -65,6 +65,7 @@
         <item name="android:background">@drawable/facebook_btn</item>
         <item name="android:textStyle">bold</item>
     </style>
+
     <style name="GooglebuttonStyle" parent="android:Widget.Holo.Button">
         <item name="android:fontFamily">@font/skia</item>
         <item name="android:textSize">12dp</item>
@@ -72,6 +73,7 @@
         <item name="android:background">@drawable/google_btn</item>
         <item name="android:textStyle">bold</item>
     </style>
+
     <style name="TwitterbuttonStyle" parent="android:Widget.Holo.Button">
         <item name="android:fontFamily">@font/skia</item>
         <item name="android:textSize">12dp</item>
@@ -79,6 +81,7 @@
         <item name="android:background">@drawable/twitter_btn</item>
         <item name="android:textStyle">bold</item>
     </style>
+
     <style name="PrimarybuttonStyle" parent="android:Widget.Holo.Button">
         <item name="android:fontFamily">@font/skia</item>
         <item name="android:textSize">12dp</item>

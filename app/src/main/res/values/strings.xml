@@ -8,6 +8,8 @@
     <string name="title_notifications">Notifications</string>
     <string name="com.twitter.sdk.android.CONSUMER_KEY">NBVLQYjEnlfCAkGHPIyTLVr8j</string>
     <string name="com.twitter.sdk.android.CONSUMER_SECRET">juEHjeP7rVKPrqgw2y99Ek0UqB2qQh3bN2CDlARfshM1YXOxTM</string>
+    <string name="pusher_instance_id">d0b707e2-0a66-45ec-9491-6c1b3fdd25fc</string>
+    <string name="pusher_channel">swingers_notifications</string>
     <string-array name="marital_status">
         <item>Marital Status</item>
         <item>Single</item>
@@ -103,4 +105,10 @@
         <item>Just Watching</item>
         <item>Being Watched in Private setting</item>
     </string-array>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">Android Studio</string>
+    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="action_settings">Settings</string>
 </resources>
