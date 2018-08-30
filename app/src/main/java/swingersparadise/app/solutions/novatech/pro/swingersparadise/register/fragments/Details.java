@@ -53,38 +53,38 @@ public class Details extends Fragment implements SetErrorListener {
         parent = view.findViewById(R.id.parent);
 
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), R.layout.spinner_textview,
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), R.layout.spinner_textview_no_bg,
                 getActivity().getResources().getStringArray(R.array.marital_status));
         marital_status.setAdapter(adapter);
 
 
-        adapter = new ArrayAdapter<>(getActivity(), R.layout.spinner_textview,
+        adapter = new ArrayAdapter<>(getActivity(), R.layout.spinner_textview_no_bg,
                 getActivity().getResources().getStringArray(R.array.gender));
         gender.setAdapter(adapter);
 
-        adapter = new ArrayAdapter<>(getActivity(), R.layout.spinner_textview,
+        adapter = new ArrayAdapter<>(getActivity(), R.layout.spinner_textview_no_bg,
                 getActivity().getResources().getStringArray(R.array.build));
         build.setAdapter(adapter);
 
-        adapter = new ArrayAdapter<>(getActivity(), R.layout.spinner_textview,
+        adapter = new ArrayAdapter<>(getActivity(), R.layout.spinner_textview_no_bg,
                 getActivity().getResources().getStringArray(R.array.ethnicity));
         ethnicity.setAdapter(adapter);
 
-        adapter = new ArrayAdapter<>(getActivity(), R.layout.spinner_textview,
+        adapter = new ArrayAdapter<>(getActivity(), R.layout.spinner_textview_no_bg,
                 getActivity().getResources().getStringArray(R.array.body_part));
         body_part.setAdapter(adapter);
 
-        adapter = new ArrayAdapter<>(getActivity(), R.layout.spinner_textview,
+        adapter = new ArrayAdapter<>(getActivity(), R.layout.spinner_textview_no_bg,
                 getActivity().getResources().getStringArray(R.array.hair_colour));
         hair_colour.setAdapter(adapter);
 
 
-        adapter = new ArrayAdapter<>(getActivity(), R.layout.spinner_textview,
+        adapter = new ArrayAdapter<>(getActivity(), R.layout.spinner_textview_no_bg,
                 getActivity().getResources().getStringArray(R.array.smoking));
         smoking.setAdapter(adapter);
 
 
-        adapter = new ArrayAdapter<>(getActivity(), R.layout.spinner_textview,
+        adapter = new ArrayAdapter<>(getActivity(), R.layout.spinner_textview_no_bg,
                 getActivity().getResources().getStringArray(R.array.drinking));
         drinking.setAdapter(adapter);
 

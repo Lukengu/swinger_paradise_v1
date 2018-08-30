@@ -11,16 +11,22 @@
     android:orientation="vertical"
     android:id="@+id/parent">
 
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/profile_image"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
         android:src="@drawable/ic_add_a_photo_black_24dp"
+        app:civ_border_width="1dp"
+        app:civ_border_color="#FFFFFF"
+        android:layout_marginTop="10dp"
         android:layout_gravity="center"
         android:layout_margin="12dp"
-        android:background="@drawable/photo_bg"
-        android:id="@+id/profile_image"
-        android:scaleType="fitXY"
         />
+
+
+
 
     <swingersparadise.app.solutions.novatech.pro.swingersparadise.ui.MultiSelectionSpinner
         android:id="@+id/sexual_preferences"
@@ -47,6 +53,7 @@
         android:layout_height="wrap_content"
         android:text="Accept terms and Conditions"
         android:id="@+id/terms_conditions"
+        android:layout_marginTop="24dp"
          />
 
     <EditText

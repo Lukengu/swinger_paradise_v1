@@ -39,15 +39,16 @@ import swingersparadise.app.solutions.novatech.pro.swingersparadise.R;
 import swingersparadise.app.solutions.novatech.pro.swingersparadise.Register;
 import swingersparadise.app.solutions.novatech.pro.swingersparadise.register.fragments.listeners.SetErrorListener;
 import swingersparadise.app.solutions.novatech.pro.swingersparadise.ui.MultiSelectionSpinner;
+import de.hdodenhof.circleimageview.CircleImageView;
 
 
 public class Preferences extends Fragment implements SetErrorListener {
 
-    private ImageView profile_image;
+    private CircleImageView profile_image;
 
     private MultiSelectionSpinner sexual_preferences;
     private CheckedTextView terms_conditions;
-    private boolean ACCEPT_TERMS_CONDITIONS = true;
+    private boolean ACCEPT_TERMS_CONDITIONS = false;
     private static final int GET_FROM_GALLERY = 0;
     private static final int REQUEST_IMAGE_CAPTURE = 1;
 
@@ -124,7 +125,11 @@ public class Preferences extends Fragment implements SetErrorListener {
             if(spref.contains("terms_conditions"))
                editor.remove("terms_conditions").commit();
 
-            editor.putBoolean("terms_conditions", ACCEPT_TERMS_CONDITIONS).commit();
+
+            ACCEPT_TERMS_CONDITIONS = spref.contains("terms_conditions");
+
+
+
 
 
             terms_conditions.setOnClickListener(new View.OnClickListener(){
@@ -141,8 +146,9 @@ public class Preferences extends Fragment implements SetErrorListener {
 
                         if(spref.contains("terms_conditions"))
                             editor.remove("terms_conditions").commit();
-                        
-                        editor.putBoolean("terms_conditions", ACCEPT_TERMS_CONDITIONS).commit();
+
+                        if(ACCEPT_TERMS_CONDITIONS)
+                            editor.putBoolean("terms_conditions", ACCEPT_TERMS_CONDITIONS).commit();
 
 
                         //Toast.makeText(getActivity(), "Selected Item: " +ACCEPT_TERMS_CONDITIONS, Toast.LENGTH_SHORT).show();
@@ -306,6 +312,22 @@ public class Preferences extends Fragment implements SetErrorListener {
 
             snackbar.show();
 
+        } else if(!spref.contains("terms_conditions")  ) {
+
+            Snackbar snackbar = Snackbar.make(parent, "You must agree with the terms & conditions ", Snackbar.LENGTH_LONG);
+            View sbView = snackbar.getView();
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                sbView.setBackground(getActivity().getDrawable(R.drawable.snackbar_error));
+            } else {
+                sbView.setBackground(getActivity().getResources().getDrawable(R.drawable.snackbar_error));
+            }
+
+
+
+            snackbar.show();
+
+
         }
 
     }
@@ -321,9 +343,9 @@ public class Preferences extends Fragment implements SetErrorListener {
     public void finishRegistration() {
 
 
-        registered_pin.setVisibility(View.VISIBLE);
+       /* registered_pin.setVisibility(View.VISIBLE);
         resend_sms.setVisibility(View.VISIBLE);
-        sendOTP();
+        sendOTP();*/
 
     }
 

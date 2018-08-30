@@ -202,8 +202,9 @@ public class Register extends AppCompatActivity {
                 ((Preferences) f).setData();
                 if(validateFinish()) {
 
-                    ((Preferences) f).finishRegistration();
+                   // ((Preferences) f).finishRegistration();
                     //btn_next.setEnabled(false);
+                    firebaseRegistration();
 
                 } else {
 
@@ -232,7 +233,7 @@ public class Register extends AppCompatActivity {
 
 
     protected boolean validateFinish(){
-        return  spref.contains("selected_image") ;
+        return  spref.contains("selected_image")  &&  spref.contains("terms_conditions");
     }
 
     protected boolean validateNext(){
@@ -255,35 +256,43 @@ public class Register extends AppCompatActivity {
 
         final String email = spref.getString("email_address", "");
         final String password = spref.getString("password", "");
+        final ProgressDialog progressDialog = new ProgressDialog(Register.this);
+        progressDialog.setTitle("Logging in...");
+        progressDialog.show();
+
+
         mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if(!task.isSuccessful()) {
                     Log.e("FireBaseRegistration", "UnSuccessfull");
+                    progressDialog.dismiss();
+                    Toast.makeText(Register.this, task.getException().getMessage(), Toast.LENGTH_LONG).show();
+
                 } else {
                     final String uuid = mAuth.getCurrentUser().getUid();
-                    DatabaseReference db = FirebaseDatabase.getInstance().getReference().child("Users").child(spref.getString("gender", "")).child(uuid);
+                    DatabaseReference db = FirebaseDatabase.getInstance().getReference().child("users").child(uuid);
 
-                    db.child("AboutMe").setValue(spref.getString("about_me",""));
-                    db.child("BodyPart").setValue(spref.getString("body_part",""));
-                    db.child("Build").setValue(spref.getString("build",""));
-                    db.child("CellphoneNumber").setValue(spref.getString("dial_code","").concat(spref.getString("mobile_number","")));
-                    db.child("Country").setValue(spref.getString("country",""));
-                    db.child("DisplayName").setValue(spref.getString("display_name",""));
-                    db.child("Drinking").setValue(spref.getString("drinking",""));
-                    db.child("Ethnicity").setValue(spref.getString("ethnicity",""));
-                    db.child("HairColor").setValue(spref.getString("hair_colour",""));
-                    db.child("MaritalStatus").setValue(spref.getString("marital_status",""));
-                    db.child("Name").setValue(spref.getString("name",""));
-                    db.child("Age").setValue(spref.getInt("age",0));
-                    db.child("RefferedBy").setValue(spref.getString("reffered_by",""));
-                    db.child("SexualPrefs").setValue(spref.getString("sexual_preferences",""));
-                    db.child("Smoking").setValue(spref.getString("smoking",""));
-                    db.child("Surname").setValue(spref.getString("surname",""));
+                    db.child("about_me").setValue(spref.getString("about_me",""));
+                    db.child("body_part").setValue(spref.getString("body_part",""));
+                    db.child("build").setValue(spref.getString("build",""));
+                    db.child("mobile_number").setValue(spref.getString("dial_code","").concat(spref.getString("mobile_number","")));
+                    db.child("country").setValue(spref.getString("country",""));
+                    db.child("display_name").setValue(spref.getString("display_name",""));
+                    db.child("drinking").setValue(spref.getString("drinking",""));
+                    db.child("ethnicity").setValue(spref.getString("ethnicity",""));
+                    db.child("hair_color").setValue(spref.getString("hair_colour",""));
+                    db.child("marital_status").setValue(spref.getString("marital_status",""));
+                    db.child("name").setValue(spref.getString("name",""));
+                    db.child("age").setValue(spref.getInt("age",0));
+                    db.child("reffered_by").setValue(spref.getString("reffered_by",""));
+                    db.child("sexual_prefs").setValue(spref.getString("sexual_preferences",""));
+                    db.child("smoking").setValue(spref.getString("smoking",""));
+                    db.child("surname").setValue(spref.getString("surname",""));
+                    db.child("gender").setValue(spref.getString("gender",""));
 
-                    final ProgressDialog progressDialog = new ProgressDialog(Register.this);
-                    progressDialog.setTitle("Logging in...");
-                    progressDialog.show();
+
+
 
                     StorageReference ref = storageReference.child("profiles/"+ uuid);
                     final String file_name  = spref.getString("selected_image", "");
@@ -317,6 +326,7 @@ public class Register extends AppCompatActivity {
                                         editor.remove("conf_password").commit();
 
                                         startActivity(new Intent(Register.this, Content.class));
+                                        finish();
                                     }
                                 })
                                 .addOnFailureListener(new OnFailureListener() {
@@ -359,5 +369,25 @@ public class Register extends AppCompatActivity {
     protected void onStop() {
         super.onStop();
         mAuth.removeAuthStateListener(authStateListener);
+    }
+
+    public void third_page(View view) {
+        position = 2;
+        viewPager.setCurrentItem(position, true);
+
+    }
+
+    public void second_page(View view) {
+        if(!validateNext()) {
+            ((Credentials) adapter.getItem(0)).setError();
+        } else {
+            position = 1;
+            viewPager.setCurrentItem(position, true);
+        }
+    }
+
+    public void first_page(View view) {
+        position = 0;
+        viewPager.setCurrentItem(position, true);
     }
 }

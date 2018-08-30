@@ -1,6 +1,7 @@
 package swingersparadise.app.solutions.novatech.pro.swingersparadise;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -11,10 +12,13 @@ import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.text.Html;
+import android.text.TextUtils;
+import android.text.method.LinkMovementMethod;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -35,6 +39,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
@@ -79,6 +84,7 @@ public class Login extends Activity {
     CallbackManager callbackManager;
     TextView register_link,reset_password;
     LoginButton loginButton;
+    EditText email, password;
 
     private static final String EMAIL = "email";
     private static final String PUBLIC_PROFILE = "public_profile";
@@ -102,6 +108,8 @@ public class Login extends Activity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         super.onCreate(savedInstanceState);
 
+        setTitle("Forgot Password?");
+
 
         //Twitter
         TwitterAuthConfig authConfig =  new TwitterAuthConfig(
@@ -121,9 +129,11 @@ public class Login extends Activity {
         setContentView(R.layout.activity_login);
         register_link =  findViewById(R.id.register_link);
         reset_password =  findViewById(R.id.reset_password);
+        email = findViewById(R.id.email);
+        password = findViewById(R.id.password);
 
-      //  register_link.setMovementMethod(LinkMovementMethod.getInstance());
-       // reset_password.setMovementMethod(LinkMovementMethod.getInstance());
+        //register_link.setMovementMethod(LinkMovementMethod.getInstance());
+        //reset_password.setMovementMethod(LinkMovementMethod.getInstance());
         users_db = FirebaseDatabase.getInstance().getReference().child("users");
 
 
@@ -148,7 +158,7 @@ public class Login extends Activity {
 
 
         String text = "Don't have a account yet . Please <a href=\"app://register\">Register</a>";
-        String reset = "<a href=\"app://reset_password\">Reset</a> Password";
+        String reset = "<a href=\"app://reset_password\">Forgot</a> Password?";
         mAuth = FirebaseAuth.getInstance();
 
         authStateListener = new FirebaseAuth.AuthStateListener() {
@@ -158,7 +168,7 @@ public class Login extends Activity {
                 if (user != null) {
 
                     startActivity(new Intent(Login.this, Content.class));
-                    finish();
+
                 }
             }
         };
@@ -172,6 +182,12 @@ public class Login extends Activity {
             register_link.setText(Html.fromHtml(text));
             reset_password.setText(Html.fromHtml(reset));
         }
+        reset_password.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(Login.this, ResetPassword.class));
+            }
+        });
         callbackManager = CallbackManager.Factory.create();
         loginButton = findViewById(R.id.login_button);
         loginButton.setReadPermissions(Arrays.asList(EMAIL, PUBLIC_PROFILE));
@@ -507,7 +523,31 @@ public class Login extends Activity {
     }
 
     public void email_sign_in(View view) {
-        startActivity(new Intent(Login.this, Register.class));
+      if(TextUtils.isEmpty(email.getText().toString())){
+          email.setError("Email is required");
+      } else if(TextUtils.isEmpty(password.getText().toString())){
+          password.setError("Password is required");
+
+      } else {
+          final ProgressDialog progressDialog = new ProgressDialog(this);
+          progressDialog.show();
+
+          mAuth.signInWithEmailAndPassword(email.getText().toString(),password.getText().toString()).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+              @Override
+              public void onComplete(@NonNull Task<AuthResult> task) {
+                   progressDialog.dismiss();
+                  if(task.isSuccessful()){
+                      startActivity(new Intent(Login.this, Content.class));
+                  }
+              }
+          })
+                  .addOnFailureListener(new OnFailureListener() {
+                      @Override
+                      public void onFailure(@NonNull Exception e) {
+                          Toast.makeText(Login.this, e.getMessage(), Toast.LENGTH_LONG).show();
+                      }
+                  });
+      }
     }
 
     public void twitter_signin(View view) {

@@ -25,7 +25,7 @@ public class MultiSelectionSpinner extends Spinner implements
         super(context);
 
         simple_adapter = new ArrayAdapter<String>(context,
-                R.layout.spinner_checked_textview);
+                R.layout.spinner_checked_textview_no_bg);
         super.setAdapter(simple_adapter);
     }
 
@@ -34,7 +34,7 @@ public class MultiSelectionSpinner extends Spinner implements
 
 
         simple_adapter = new ArrayAdapter<String>(context,
-                R.layout.spinner_checked_textview);
+                R.layout.spinner_checked_textview_no_bg);
         super.setAdapter(simple_adapter);
     }
 
