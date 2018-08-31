@@ -93,10 +93,10 @@ public class Content extends AppCompatActivity
         MenuItem default_menu =  sharedPreferences.contains("selected_menu") ?
                 navigationView.getMenu().findItem(sharedPreferences.getInt("selected_menu", R.id.nav_discover))  :  navigationView.getMenu().findItem(R.id.nav_discover) ;
 
-        ;
 
-        navigationView.setCheckedItem(default_menu);
-        onNavigationItemSelected(default_menu);
+      //  navigationView.setCheckedItem(default_menu != null ? default_menu :  navigationView.getMenu().findItem(R.id.nav_matches) );
+        //onNavigationItemSelected(default_menu);
+        loadFragment("discover", null);
 
         mAuth = FirebaseAuth.getInstance();
         authStateListener = new FirebaseAuth.AuthStateListener() {

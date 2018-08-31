@@ -8,8 +8,8 @@
     <ImageView
         android:layout_width="match_parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:layout_height="match_parent"
-        android:background="@drawable/noise_gradient"
+        android:layout_height="90dp"
+        android:background="@color/colorPrimary"
 
 
 
@@ -18,8 +18,8 @@
     <de.hdodenhof.circleimageview.CircleImageView
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/profile_image"
-        android:layout_width="120dp"
-        android:layout_height="120dp"
+        android:layout_width="140dp"
+        android:layout_height="140dp"
         app:civ_border_width="1dp"
         app:civ_border_color="#FFFFFF"
         android:layout_marginTop="20dp"
@@ -27,6 +27,65 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         />
+    <ImageView
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/profile_image"
+        android:id="@+id/gender"
+        android:layout_marginTop="@dimen/activity_vertical_margin"
+        android:layout_marginBottom="@dimen/activity_vertical_margin"/>
+
+
+
+    <ToggleButton
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:textOff=""
+        android:textOn=""
+        android:background="@drawable/favorite_btn"
+        android:focusable="false"
+        android:focusableInTouchMode="false"
+        android:layout_centerVertical="true"
+        android:layout_marginTop="40dp"
+        android:layout_marginRight="9dp"
+        android:checked="false"
+
+        />
+
+
+
+    <android.support.v7.widget.RecyclerView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/gender"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_marginRight="@dimen/activity_vertical_margin"
+        android:layout_marginLeft="@dimen/activity_vertical_margin"
+        />
+
+
+    <android.support.design.widget.BottomNavigationView
+        android:id="@+id/navigation"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="0dp"
+        android:layout_marginStart="0dp"
+        android:background="?android:attr/windowBackground"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:menu="@menu/profile_navigation"
+        app:layout_behavior="@string/hide_bottom_view_on_scroll_behavior"
+        />
+
+
 
 
 

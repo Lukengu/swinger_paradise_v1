@@ -23,8 +23,15 @@ import com.mindorks.placeholderview.annotations.swipe.SwipeInState;
 import com.mindorks.placeholderview.annotations.swipe.SwipeOut;
 import com.mindorks.placeholderview.annotations.swipe.SwipeOutState;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
+
 import swingersparadise.app.solutions.novatech.pro.swingersparadise.R;
 import swingersparadise.app.solutions.novatech.pro.swingersparadise.main.entities.Card;
+import swingersparadise.app.solutions.novatech.pro.swingersparadise.utils.GenderConverter;
+
+import static com.facebook.FacebookSdk.getApplicationContext;
 
 @Layout(R.layout.item)
 public class TinderCard {
@@ -32,10 +39,15 @@ public class TinderCard {
     @View(R.id.profile_image)
     private ImageView profileImageView;
 
+    @View(R.id.gender)
+    private ImageView gender;
+
 
     private Card mCard;
     private Context mContext;
     private SwipePlaceHolderView mSwipeView;
+
+    private PropertyChangeSupport changes = new PropertyChangeSupport(this);
 
     private FirebaseAuth firebaseAuth;
   //  private DatabaseReference user_db;
@@ -67,6 +79,9 @@ public class TinderCard {
 
             }
         });
+        gender.setImageDrawable( getApplicationContext().getResources().getDrawable(GenderConverter.convert(mCard)));
+        changes.firePropertyChange("mCard",null, mCard);
+
     }
 
 
@@ -75,6 +90,7 @@ public class TinderCard {
         Log.d("EVENT", "onSwipedOut");
         //  user_db.child(mCard.getOpposite_gender()).child(mCard.getUuid()).child("Connections").child("Nope").child(firebaseAuth.getCurrentUser().getUid()).setValue("true");
         mSwipeView.addView(this);
+        changes.firePropertyChange("mCard",null, mCard);
     }
 
     @SwipeCancelState
@@ -86,6 +102,7 @@ public class TinderCard {
     private void onSwipeIn () {
         Log.d("EVENT", "onSwipedIn");
         // user_db.child(mCard.getOpposite_gender()).child(mCard.getUuid()).child("Connections").child("Yep").child(firebaseAuth.getCurrentUser().getUid()).setValue("true");
+        changes.firePropertyChange("mCard",null, mCard);
 
     }
 
@@ -99,4 +116,12 @@ public class TinderCard {
         Log.d("EVENT", "onSwipeOutState");
     }
 
+    public void addPropertyChangeListener(
+            PropertyChangeListener l) {
+        changes.addPropertyChangeListener(l);
+    }
+    public void removePropertyChangeListener(
+            PropertyChangeListener l) {
+        changes.removePropertyChangeListener(l);
+    }
 }

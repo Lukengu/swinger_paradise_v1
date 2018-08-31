@@ -22,7 +22,7 @@
             android:value="@string/facebook_app_id" />
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_icon"
-            android:resource="@mipmap/ic_launcher" />
+            android:resource="@drawable/logo" />
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_color"
             android:resource="@color/colorAccent" />
@@ -73,10 +73,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".ContentOLD"
-            android:label="@string/title_activity_content"
-            android:screenOrientation="portrait" />
+
         <activity
             android:name=".Register"
             android:parentActivityName=".Login"
@@ -112,7 +109,8 @@
         <activity
             android:name=".Content"
             android:label="@string/title_activity_content"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar"
+            android:screenOrientation="portrait"/>
     </application>
 
 </manifest>

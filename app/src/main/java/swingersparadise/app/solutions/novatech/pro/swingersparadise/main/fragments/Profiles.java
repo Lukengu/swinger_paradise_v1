@@ -26,6 +26,8 @@ import com.twitter.sdk.android.tweetui.internal.AspectRatioFrameLayout;
 
 import org.json.JSONObject;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -34,7 +36,7 @@ import swingersparadise.app.solutions.novatech.pro.swingersparadise.main.entitie
 import swingersparadise.app.solutions.novatech.pro.swingersparadise.main.view.TinderCard;
 import swingersparadise.app.solutions.novatech.pro.swingersparadise.utils.MeasureUtils;
 
-public class Profiles extends Fragment {
+public class Profiles extends Fragment implements PropertyChangeListener{
 
     private SwipePlaceHolderView mSwipeView;
 
@@ -64,7 +66,7 @@ public class Profiles extends Fragment {
                 .setDisplayViewCount(6)
                 .setSwipeDecor(new SwipeDecor()
                         .setViewWidth(windowSize.x)
-                        .setViewHeight(windowSize.y)
+                        .setViewHeight(windowSize.y - 70)
                         .setViewGravity(Gravity.TOP)
                         .setPaddingTop(0)
                         .setRelativeScale(0.01f)
@@ -112,7 +114,9 @@ public class Profiles extends Fragment {
                     Card card = null;
                     try {
                         card = new Card(jsonObject);
-                        mSwipeView.addView(new TinderCard(getActivity(), card, mSwipeView));
+                        TinderCard tc =  new TinderCard(getActivity(), card, mSwipeView);
+                        tc.addPropertyChangeListener(Profiles.this);
+                        mSwipeView.addView(tc);
                     } catch (IllegalAccessException e) {
                         e.printStackTrace();
                     }
@@ -145,6 +149,9 @@ public class Profiles extends Fragment {
     }
 
 
-
-
+    @Override
+    public void propertyChange(PropertyChangeEvent propertyChangeEvent) {
+        Card c = (Card) propertyChangeEvent.getNewValue();
+        getActivity().setTitle(c.getDisplay_name());
+    }
 }
