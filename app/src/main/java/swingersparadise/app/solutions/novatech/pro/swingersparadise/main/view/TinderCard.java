@@ -3,6 +3,8 @@ package swingersparadise.app.solutions.novatech.pro.swingersparadise.main.view;
 
 import android.content.Context;
 import android.net.Uri;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.widget.ImageView;
 
@@ -28,6 +30,7 @@ import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 
 import swingersparadise.app.solutions.novatech.pro.swingersparadise.R;
+import swingersparadise.app.solutions.novatech.pro.swingersparadise.main.adapters.AlbumAdapter;
 import swingersparadise.app.solutions.novatech.pro.swingersparadise.main.entities.Card;
 import swingersparadise.app.solutions.novatech.pro.swingersparadise.utils.GenderConverter;
 
@@ -41,6 +44,9 @@ public class TinderCard {
 
     @View(R.id.gender)
     private ImageView gender;
+
+    @View(R.id.recycle_view)
+    private RecyclerView mRecyclerView;
 
 
     private Card mCard;
@@ -76,11 +82,20 @@ public class TinderCard {
                 Glide.with(mContext)
                         .load(uri.toString())
                         .into(profileImageView);
+                changes.firePropertyChange("mCard",null, mCard);
+
 
             }
+
         });
         gender.setImageDrawable( getApplicationContext().getResources().getDrawable(GenderConverter.convert(mCard)));
-        changes.firePropertyChange("mCard",null, mCard);
+
+        AlbumAdapter albumAdapter = new AlbumAdapter(mContext, mCard);
+
+        mRecyclerView.setAdapter(albumAdapter);
+        GridLayoutManager mGridLayoutManager = new GridLayoutManager(mContext, 3);
+        mRecyclerView.setLayoutManager(mGridLayoutManager);
+        mRecyclerView.setHasFixedSize(true);
 
     }
 

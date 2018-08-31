@@ -3,22 +3,22 @@
 
     <item
         android:id="@+id/thumbs_up"
-        android:icon="@drawable/thumbs_up"
+        android:icon="@drawable/ic_thumb_up_green_24dp"
         android:title="" />
 
     <item
         android:id="@+id/back"
-        android:icon="@drawable/images_back"
+        android:icon="@drawable/ic_settings_backup_restore_black_24dp"
         android:title="" />
 
     <item
         android:id="@+id/navigation_notifications"
-        android:icon="@drawable/roadside_assistance_unlock_icon"
+        android:icon="@drawable/ic_lock_open_black_24dp"
         android:title="" />
 
     <item
         android:id="@+id/thumbs_down"
-        android:icon="@drawable/thumbs_down"
+        android:icon="@drawable/ic_thumb_down_black_24dp"
 
         android:title="" />
 

@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -28,10 +30,13 @@ import org.json.JSONObject;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import swingersparadise.app.solutions.novatech.pro.swingersparadise.R;
+import swingersparadise.app.solutions.novatech.pro.swingersparadise.main.adapters.AlbumAdapter;
 import swingersparadise.app.solutions.novatech.pro.swingersparadise.main.entities.Card;
 import swingersparadise.app.solutions.novatech.pro.swingersparadise.main.view.TinderCard;
 import swingersparadise.app.solutions.novatech.pro.swingersparadise.utils.MeasureUtils;
@@ -39,6 +44,9 @@ import swingersparadise.app.solutions.novatech.pro.swingersparadise.utils.Measur
 public class Profiles extends Fragment implements PropertyChangeListener{
 
     private SwipePlaceHolderView mSwipeView;
+    RecyclerView mRecyclerView;
+    List<String> photos = new ArrayList<>();
+
 
    // private ImageButton rejectBtn,acceptBtn;
     FirebaseUser user;
@@ -50,6 +58,10 @@ public class Profiles extends Fragment implements PropertyChangeListener{
                 container, false);
 
         mSwipeView = view.findViewById(R.id.swipeView);
+        mRecyclerView = view.findViewById(R.id.recycle_view);
+
+
+
 
         DisplayMetrics displayMetrics = new DisplayMetrics();
         getActivity().getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
@@ -58,7 +70,7 @@ public class Profiles extends Fragment implements PropertyChangeListener{
 
 
         Point windowSize = MeasureUtils.getDisplaySize(getActivity().getWindowManager());
-
+        int bottomMargin = MeasureUtils.dpToPx(80);
 
 
         user = FirebaseAuth.getInstance().getCurrentUser();
@@ -66,20 +78,21 @@ public class Profiles extends Fragment implements PropertyChangeListener{
                 .setDisplayViewCount(6)
                 .setSwipeDecor(new SwipeDecor()
                         .setViewWidth(windowSize.x)
-                        .setViewHeight(windowSize.y - 70)
+                        .setViewHeight(windowSize.y - bottomMargin)
                         .setViewGravity(Gravity.TOP)
                         .setPaddingTop(0)
                         .setRelativeScale(0.01f)
                         .setSwipeInMsgLayoutId(R.layout.swipe_in_message)
                         .setSwipeOutMsgLayoutId(R.layout.swipe_out_message));
 
-        CardInfos();
-
-
         return view;
     }
 
-
+    @Override
+    public void onStart() {
+        super.onStart();
+        CardInfos();
+    }
 
     private void CardInfos() {
 

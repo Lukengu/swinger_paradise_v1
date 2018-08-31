@@ -94,9 +94,9 @@ public class Content extends AppCompatActivity
                 navigationView.getMenu().findItem(sharedPreferences.getInt("selected_menu", R.id.nav_discover))  :  navigationView.getMenu().findItem(R.id.nav_discover) ;
 
 
-      //  navigationView.setCheckedItem(default_menu != null ? default_menu :  navigationView.getMenu().findItem(R.id.nav_matches) );
-        //onNavigationItemSelected(default_menu);
-        loadFragment("discover", null);
+        navigationView.setCheckedItem(default_menu != null ? default_menu :  navigationView.getMenu().findItem(R.id.nav_matches) );
+        onNavigationItemSelected(default_menu);
+        //loadFragment("discover", null);
 
         mAuth = FirebaseAuth.getInstance();
         authStateListener = new FirebaseAuth.AuthStateListener() {
@@ -181,6 +181,9 @@ public class Content extends AppCompatActivity
 
                 }
             });
+        } else {
+            startActivity(new Intent(Content.this, Login.class));
+            finish();
         }
     }
 
@@ -220,30 +223,33 @@ public class Content extends AppCompatActivity
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
-        int id = item.getItemId();
 
-        switch(id){
-            case R.id.nav_profile:
-                editor.putInt("selected_menu",R.id.nav_profile).commit();
-                loadFragment("profile", null);
-                break;
-            case R.id.nav_discover:
-                editor.putInt("selected_menu",R.id.nav_discover).commit();
-                loadFragment("discover", null);
-                break;
-            case R.id.nav_matches:
-                editor.putInt("selected_menu",R.id.nav_matches).commit();
-                loadFragment("matches", null);
-                break;
-            case R.id.nav_logout:
-                mAuth.signOut();
-                startActivity(new Intent(Content.this, Login.class));
-                break;
-        }
+            int id = item.getItemId();
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
-        return true;
+            switch (id) {
+                case R.id.nav_profile:
+                    editor.putInt("selected_menu", R.id.nav_profile).commit();
+                    loadFragment("profile", null);
+                    break;
+                case R.id.nav_discover:
+                    editor.putInt("selected_menu", R.id.nav_discover).commit();
+                    loadFragment("discover", null);
+                    break;
+                case R.id.nav_matches:
+                    editor.putInt("selected_menu", R.id.nav_matches).commit();
+                    loadFragment("matches", null);
+                    break;
+                case R.id.nav_logout:
+                    mAuth.signOut();
+                    startActivity(new Intent(Content.this, Login.class));
+                    break;
+            }
+
+            DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+            drawer.closeDrawer(GravityCompat.START);
+            return true;
+
+
     }
     public void loadFragment(String name, @Nullable Bundle bundle) {
 

@@ -10,12 +10,14 @@ public class GenderConverter {
 
     public static int  convert(Card card) {
 
-        if(card.getMarital_status().contains("Married"))
+        if(card.getMarital_status().contains("Married") ||  card.getMarital_status().contains("Relationship")) {
             return R.drawable.couple_icon;
-        if(card.getMarital_status().equals("Single") && card.getGender().equals("Male"))
+        } else if(card.getMarital_status().equals("Single") && card.getGender().equals("Male")){
             return R.drawable.male;
-        if(card.getMarital_status().equals("Single") && card.getGender().equals("Female"))
+        }else if(card.getMarital_status().equals("Single") && card.getGender().equals("Female")) {
             return R.drawable.female;
+        }
+
         return 0;
     }
 }
