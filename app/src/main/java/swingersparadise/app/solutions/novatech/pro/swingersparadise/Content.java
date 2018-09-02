@@ -91,11 +91,10 @@ public class Content extends AppCompatActivity
        // profile_image = headerView.findViewById(R.id.profile_image);
 
         MenuItem default_menu =  sharedPreferences.contains("selected_menu") ?
-                navigationView.getMenu().findItem(sharedPreferences.getInt("selected_menu", R.id.nav_discover))  :  navigationView.getMenu().findItem(R.id.nav_discover) ;
+                navigationView.getMenu().findItem(sharedPreferences.getInt("selected_menu", R.id.nav_discover))  :
+                  navigationView.getMenu().findItem(R.id.nav_discover) ;
 
-
-        navigationView.setCheckedItem(default_menu != null ? default_menu :  navigationView.getMenu().findItem(R.id.nav_matches) );
-        onNavigationItemSelected(default_menu);
+     default_menu = navigationView.getMenu().findItem(R.id.nav_discover);
         //loadFragment("discover", null);
 
         mAuth = FirebaseAuth.getInstance();
@@ -225,6 +224,8 @@ public class Content extends AppCompatActivity
         // Handle navigation view item clicks here.
 
             int id = item.getItemId();
+            editor.remove("selected_menu").commit();
+
 
             switch (id) {
                 case R.id.nav_profile:

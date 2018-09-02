@@ -73,7 +73,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".Register"
             android:parentActivityName=".Login"
@@ -109,8 +108,18 @@
         <activity
             android:name=".Content"
             android:label="@string/title_activity_content"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".MatePhotosViewer"
+            android:screenOrientation="portrait"
+            android:label="@string/title_activity_mate_photos_viewer"
+            android:parentActivityName=".Content"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="Content" />
+        </activity>
     </application>
 
 </manifest>

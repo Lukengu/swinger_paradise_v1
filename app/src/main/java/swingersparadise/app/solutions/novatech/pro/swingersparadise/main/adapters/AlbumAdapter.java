@@ -1,8 +1,10 @@
 package swingersparadise.app.solutions.novatech.pro.swingersparadise.main.adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Typeface;
 import android.net.Uri;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
@@ -28,6 +30,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import swingersparadise.app.solutions.novatech.pro.swingersparadise.MatePhotosViewer;
 import swingersparadise.app.solutions.novatech.pro.swingersparadise.R;
 import swingersparadise.app.solutions.novatech.pro.swingersparadise.main.entities.Card;
 
@@ -98,6 +101,9 @@ public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.AlbumListVie
         View mView = LayoutInflater.from(parent.getContext()).inflate(R.layout.photo_view, parent, false);
         final AlbumListViewHolder mViewHolder = new AlbumListViewHolder(mView);
 
+
+
+
         return mViewHolder;
 
     }
@@ -137,7 +143,7 @@ public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.AlbumListVie
         return photos.size();
     }
 
-    class AlbumListViewHolder extends RecyclerView.ViewHolder {
+    class AlbumListViewHolder extends RecyclerView.ViewHolder  implements  View.OnClickListener{
 
         ImageView mImage;
       //  TextView mTitle;
@@ -145,12 +151,27 @@ public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.AlbumListVie
         public AlbumListViewHolder(View itemView) {
             super(itemView);
             mImage = itemView.findViewById(R.id.photo);
+            itemView.setOnClickListener(this);
           //  mTitle = itemView.findViewById(R.id.tvTitle);
 
         }
 
 
+        @Override
+        public void onClick(View view) {
+             ArrayList photos_extra = new ArrayList();
+            photos_extra.addAll(photos);
 
+            Bundle b =new Bundle();
+            b.putInt("position", getAdapterPosition());
+            b.putStringArrayList("photos",photos_extra);
+            b.putString("display_name", card.getDisplay_name());
+            b.putString("uuid", card.getUuid());
+            Intent i = new Intent(mContext, MatePhotosViewer.class).putExtras(b);
+
+            mContext.startActivity(i);
+
+        }
     }
 
 

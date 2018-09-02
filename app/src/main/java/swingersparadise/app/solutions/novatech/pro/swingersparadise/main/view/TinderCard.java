@@ -1,8 +1,13 @@
 package swingersparadise.app.solutions.novatech.pro.swingersparadise.main.view;
 
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.net.Uri;
+import android.support.constraint.ConstraintLayout;
+import android.support.design.widget.Snackbar;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -34,10 +39,9 @@ import swingersparadise.app.solutions.novatech.pro.swingersparadise.main.adapter
 import swingersparadise.app.solutions.novatech.pro.swingersparadise.main.entities.Card;
 import swingersparadise.app.solutions.novatech.pro.swingersparadise.utils.GenderConverter;
 
-import static com.facebook.FacebookSdk.getApplicationContext;
 
 @Layout(R.layout.item)
-public class TinderCard {
+public class TinderCard implements android.view.View.OnClickListener {
 
     @View(R.id.profile_image)
     private ImageView profileImageView;
@@ -47,6 +51,31 @@ public class TinderCard {
 
     @View(R.id.recycle_view)
     private RecyclerView mRecyclerView;
+
+    @View(R.id.connect_no)
+    private ImageView connect_no;
+
+
+    @View(R.id.connect_yes)
+    private ImageView connect_yes;
+
+    @View(R.id.unlock_action)
+    private ImageView unlock_action;
+
+    @View(R.id.container)
+    private ConstraintLayout container;
+
+    @View(R.id.back_to_profile)
+    private ImageView back_to_profile;
+
+   // @View(R.id.swiperefresh)
+    //private android.support.v4.widget.SwipeRefreshLayout swiperefresh;
+
+
+
+
+
+
 
 
     private Card mCard;
@@ -88,16 +117,52 @@ public class TinderCard {
             }
 
         });
-        gender.setImageDrawable( getApplicationContext().getResources().getDrawable(GenderConverter.convert(mCard)));
+        gender.setImageDrawable( mContext.getResources().getDrawable(GenderConverter.convert(mCard)));
 
+
+        RefreshList();
+
+       // swiperefresh.setRefreshing(true);
+
+
+       /* swiperefresh.setOnRefreshListener(
+                new SwipeRefreshLayout.OnRefreshListener() {
+                    @Override
+                    public void onRefresh() {
+
+
+                        // This method performs the actual data-refresh operation.
+                        // The method calls setRefreshing(false) when it's finished.
+                        RefreshList();
+                    }
+                }
+        );*/
+
+
+
+        connect_no.setOnClickListener(this);
+        connect_yes.setOnClickListener(this);
+        unlock_action.setOnClickListener(this);
+        back_to_profile.setOnClickListener(this);
+
+
+
+
+
+
+
+    }
+
+    private void RefreshList(){
         AlbumAdapter albumAdapter = new AlbumAdapter(mContext, mCard);
-
         mRecyclerView.setAdapter(albumAdapter);
         GridLayoutManager mGridLayoutManager = new GridLayoutManager(mContext, 3);
         mRecyclerView.setLayoutManager(mGridLayoutManager);
         mRecyclerView.setHasFixedSize(true);
 
+
     }
+
 
 
     @SwipeOut
@@ -121,6 +186,9 @@ public class TinderCard {
 
     }
 
+
+
+
     @SwipeInState
     private void onSwipeInState () {
         Log.d("EVENT", "onSwipeInState");
@@ -131,6 +199,8 @@ public class TinderCard {
         Log.d("EVENT", "onSwipeOutState");
     }
 
+
+
     public void addPropertyChangeListener(
             PropertyChangeListener l) {
         changes.addPropertyChangeListener(l);
@@ -138,5 +208,44 @@ public class TinderCard {
     public void removePropertyChangeListener(
             PropertyChangeListener l) {
         changes.removePropertyChangeListener(l);
+    }
+
+    @Override
+    public void onClick(android.view.View view) {
+
+        switch(view.getId()){
+            case  R.id.connect_no:
+                mSwipeView.doSwipe(false);
+                break;
+            case R.id.connect_yes:
+                mSwipeView.doSwipe(true);
+                break;
+            case R.id.unlock_action:
+                // Send notification to unlock
+                 Snackbar.make(container, "Your request to unlock  sent to "+mCard.getDisplay_name()+"", Snackbar.LENGTH_LONG).show();
+                break;
+
+            case R.id.back_to_profile:
+                // Send notification to unlock
+                //Snackbar.make(container, "Your request to unlock "+mCard.getDisplay_name()+"'s private profile has been sent", Snackbar.LENGTH_LONG).show();
+                 AlertDialog alertDialog =  new AlertDialog.Builder(mContext).create();
+                alertDialog.setTitle("");
+                alertDialog.setMessage("This will take you to profile you have viewed already. Do you wish to continue ?");
+                alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "No",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        });
+                alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+
+                alertDialog.show();
+                break;
+        }
     }
 }
