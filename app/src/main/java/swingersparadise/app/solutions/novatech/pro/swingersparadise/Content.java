@@ -96,6 +96,7 @@ public class Content extends AppCompatActivity
 
      default_menu = navigationView.getMenu().findItem(R.id.nav_discover);
         //loadFragment("discover", null);
+        onNavigationItemSelected(default_menu);
 
         mAuth = FirebaseAuth.getInstance();
         authStateListener = new FirebaseAuth.AuthStateListener() {

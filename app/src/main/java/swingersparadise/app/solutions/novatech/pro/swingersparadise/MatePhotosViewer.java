@@ -62,7 +62,7 @@ public class MatePhotosViewer extends AppCompatActivity {
                     }
                 });
             }
-        },1,9000);
+        },9000,9000);
 
 
     }

@@ -45,7 +45,7 @@ public class Profiles extends Fragment implements PropertyChangeListener{
 
     private SwipePlaceHolderView mSwipeView;
     RecyclerView mRecyclerView;
-    List<String> photos = new ArrayList<>();
+    List<Card> cards = new ArrayList<>();
 
 
    // private ImageButton rejectBtn,acceptBtn;
@@ -85,6 +85,14 @@ public class Profiles extends Fragment implements PropertyChangeListener{
                         .setSwipeInMsgLayoutId(R.layout.swipe_in_message)
                         .setSwipeOutMsgLayoutId(R.layout.swipe_out_message));
 
+        //mSwipeView.onViewAdded();
+
+        getActivity().setTitle(cards.get(cards.size() - 1 ).getDisplay_name());
+
+
+
+
+
         return view;
     }
 
@@ -92,6 +100,7 @@ public class Profiles extends Fragment implements PropertyChangeListener{
     public void onStart() {
         super.onStart();
         CardInfos();
+
     }
 
     private void CardInfos() {
@@ -127,6 +136,7 @@ public class Profiles extends Fragment implements PropertyChangeListener{
                     Card card = null;
                     try {
                         card = new Card(jsonObject);
+                        cards.add(card);
                         TinderCard tc =  new TinderCard(getActivity(), card, mSwipeView);
                         tc.addPropertyChangeListener(Profiles.this);
                         mSwipeView.addView(tc);
@@ -165,6 +175,10 @@ public class Profiles extends Fragment implements PropertyChangeListener{
     @Override
     public void propertyChange(PropertyChangeEvent propertyChangeEvent) {
         Card c = (Card) propertyChangeEvent.getNewValue();
-        getActivity().setTitle(c.getDisplay_name());
+       // getActivity().setTitle(c.getDisplay_name());
+       //mSwipeView.get
+
+        int index = cards.indexOf(c);
+        getActivity().setTitle(cards.get(index - 1 ).getDisplay_name());
     }
 }

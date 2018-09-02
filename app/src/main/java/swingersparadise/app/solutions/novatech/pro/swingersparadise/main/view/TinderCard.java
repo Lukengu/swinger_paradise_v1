@@ -111,7 +111,7 @@ public class TinderCard implements android.view.View.OnClickListener {
                 Glide.with(mContext)
                         .load(uri.toString())
                         .into(profileImageView);
-                changes.firePropertyChange("mCard",null, mCard);
+               // changes.firePropertyChange("mCard",null, mCard);
 
 
             }
@@ -247,5 +247,8 @@ public class TinderCard implements android.view.View.OnClickListener {
                 alertDialog.show();
                 break;
         }
+    }
+    public Card getCard(){
+        return mCard;
     }
 }
