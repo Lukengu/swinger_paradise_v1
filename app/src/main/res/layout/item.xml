@@ -40,6 +40,7 @@
         app:layout_constraintTop_toTopOf="parent"
         android:layout_marginTop="40dp"
         android:layout_marginLeft="24dp"
+        android:id="@+id/friend_request"
 
 
 
@@ -59,6 +60,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         android:layout_marginTop="40dp"
+        android:id="@+id/favorite_btn"
 
         />
 

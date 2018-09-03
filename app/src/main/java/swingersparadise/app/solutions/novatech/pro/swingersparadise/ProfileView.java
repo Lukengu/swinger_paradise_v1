@@ -48,9 +48,19 @@ public class ProfileView extends AppCompatActivity {
 
         });
         ((TextView) findViewById(R.id.display_name)).setText(card.getDisplay_name());
-        //((TextView) findViewById(R.id.age)).setText(card.getAge());
-        //((TextView) findViewById(R.id.prof_gender)).setText(card.getGender());
-        //((TextView) findViewById(R.id.prof_marital_status)).setText(card.getMarital_status());
+        ((TextView) findViewById(R.id.age)).setText(!String.valueOf(card.getAge()).equals("0")? String.valueOf(card.getAge()) : "");
+        ((TextView) findViewById(R.id.prof_gender)).setText(card.getGender());
+        ((TextView) findViewById(R.id.prof_marital_status)).setText(card.getMarital_status());
+        ((TextView) findViewById(R.id.ethnicity)).setText(card.getEthnicity());
+        ((TextView) findViewById(R.id.country)).setText(card.getCountry());
+
+        ((TextView) findViewById(R.id.body_part)).setText(card.getBody_part());
+        ((TextView) findViewById(R.id.build)).setText(card.getBuild());
+        ((TextView) findViewById(R.id.hair_color)).setText(card.getHair_color());
+        ((TextView) findViewById(R.id.smoking)).setText(card.getSmoking());
+        ((TextView) findViewById(R.id.driking)).setText(card.getDrinking());
+        ((TextView) findViewById(R.id.sexual_preferences)).setText(card.getSexual_prefs());
+        ((TextView) findViewById(R.id.about_me)).setText(card.getAbout_me());
 
     }
 

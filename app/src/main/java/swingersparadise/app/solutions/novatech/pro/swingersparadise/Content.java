@@ -29,6 +29,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.pusher.pushnotifications.PushNotifications;
 
 import org.json.JSONObject;
 
@@ -131,8 +132,8 @@ public class Content extends AppCompatActivity
                         Map<String, String> data = new HashMap<>();
                         data.put("display_name", dataSnapshot.hasChild("display_name") ? dataSnapshot.child("display_name").getValue().toString() : "");
                         data.put("drinking", dataSnapshot.hasChild("drinking") ? dataSnapshot.child("drinking").getValue().toString() : "");
-                        data.put("age", dataSnapshot.hasChild("display_name") ? dataSnapshot.child("display_name").getValue().toString() : "");
-                        data.put("body_part", dataSnapshot.hasChild("display_name") ? dataSnapshot.child("display_name").getValue().toString() : "");
+                        data.put("age", dataSnapshot.hasChild("age") ? dataSnapshot.child("age").getValue().toString() : "");
+                        data.put("body_part", dataSnapshot.hasChild("body_part") ? dataSnapshot.child("body_part").getValue().toString() : "");
                         data.put("build", dataSnapshot.hasChild("build") ? dataSnapshot.child("build").getValue().toString() : "");
                         data.put("country", dataSnapshot.hasChild("country") ? dataSnapshot.child("country").getValue().toString() : "");
                         data.put("about_me", dataSnapshot.hasChild("about_me") ? dataSnapshot.child("about_me").getValue().toString() : "");
@@ -156,6 +157,9 @@ public class Content extends AppCompatActivity
 
                         JSONObject jsonObject = new JSONObject(data);
                         display_name.setText("Welcome "+ jsonObject.optString("display_name"));
+
+                        PushNotifications.start(Content.this, getString(R.string.pusher_instance_id));
+                        PushNotifications.subscribe(currentUser.getUid());
 
 
                     }

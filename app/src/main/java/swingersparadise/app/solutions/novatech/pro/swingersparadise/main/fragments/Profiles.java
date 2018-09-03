@@ -22,6 +22,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.mindorks.placeholderview.SwipeDecor;
 import com.mindorks.placeholderview.SwipePlaceHolderView;
 import com.twitter.sdk.android.tweetui.internal.AspectRatioFrameLayout;
@@ -110,42 +111,107 @@ public class Profiles extends Fragment implements PropertyChangeListener{
         users_db.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                if(!dataSnapshot.getKey().equals(user.getUid()) ){
-                    Map<String, String> data = new HashMap<>();
+                if(dataSnapshot.exists() && !dataSnapshot.getKey().equals(user.getUid()) ){
+
+                    if(!dataSnapshot.hasChild("connections")) {
+                        Map<String, String> data = new HashMap<>();
 
 
-                    data.put("uuid",  dataSnapshot.getKey());
-                    data.put("display_name", dataSnapshot.hasChild("display_name") ? dataSnapshot.child("display_name").getValue().toString() : "");
-                    data.put("drinking", dataSnapshot.hasChild("drinking") ? dataSnapshot.child("drinking").getValue().toString() : "");
-                    data.put("age", dataSnapshot.hasChild("display_name") ? dataSnapshot.child("display_name").getValue().toString() : "");
-                    data.put("body_part", dataSnapshot.hasChild("display_name") ? dataSnapshot.child("display_name").getValue().toString() : "");
-                    data.put("build", dataSnapshot.hasChild("build") ? dataSnapshot.child("build").getValue().toString() : "");
-                    data.put("country", dataSnapshot.hasChild("country") ? dataSnapshot.child("country").getValue().toString() : "");
-                    data.put("about_me", dataSnapshot.hasChild("about_me") ? dataSnapshot.child("about_me").getValue().toString() : "");
-                    data.put("gender", dataSnapshot.hasChild("gender") ? dataSnapshot.child("gender").getValue().toString() : "");
-                    data.put("hair_color", dataSnapshot.hasChild("hair_color") ? dataSnapshot.child("hair_color").getValue().toString() : "");
-                    data.put("marital_status", dataSnapshot.hasChild("marital_status") ? dataSnapshot.child("marital_status").getValue().toString() : "");
-                    data.put("name", dataSnapshot.hasChild("name") ? dataSnapshot.child("name").getValue().toString() : "");
-                    data.put("referred_by", dataSnapshot.hasChild("referred_by") ? dataSnapshot.child("referred_by").getValue().toString() : "");
-                    data.put("sexual_prefs", dataSnapshot.hasChild("sexual_prefs") ? dataSnapshot.child("sexual_prefs").getValue().toString() : "");
-                    data.put("ethnicity", dataSnapshot.hasChild("ethnicity") ? dataSnapshot.child("ethnicity").getValue().toString() : "");
-                    data.put("smoking", dataSnapshot.hasChild("smoking") ? dataSnapshot.child("smoking").getValue().toString() : "");
+                        data.put("uuid", dataSnapshot.getKey());
+                        data.put("display_name", dataSnapshot.hasChild("display_name") ? dataSnapshot.child("display_name").getValue().toString() : "");
+                        data.put("drinking", dataSnapshot.hasChild("drinking") ? dataSnapshot.child("drinking").getValue().toString() : "");
+                        data.put("age", dataSnapshot.hasChild("display_name") ? dataSnapshot.child("display_name").getValue().toString() : "");
+                        data.put("body_part", dataSnapshot.hasChild("display_name") ? dataSnapshot.child("display_name").getValue().toString() : "");
+                        data.put("build", dataSnapshot.hasChild("build") ? dataSnapshot.child("build").getValue().toString() : "");
+                        data.put("country", dataSnapshot.hasChild("country") ? dataSnapshot.child("country").getValue().toString() : "");
+                        data.put("about_me", dataSnapshot.hasChild("about_me") ? dataSnapshot.child("about_me").getValue().toString() : "");
+                        data.put("gender", dataSnapshot.hasChild("gender") ? dataSnapshot.child("gender").getValue().toString() : "");
+                        data.put("hair_color", dataSnapshot.hasChild("hair_color") ? dataSnapshot.child("hair_color").getValue().toString() : "");
+                        data.put("marital_status", dataSnapshot.hasChild("marital_status") ? dataSnapshot.child("marital_status").getValue().toString() : "");
+                        data.put("name", dataSnapshot.hasChild("name") ? dataSnapshot.child("name").getValue().toString() : "");
+                        data.put("referred_by", dataSnapshot.hasChild("referred_by") ? dataSnapshot.child("referred_by").getValue().toString() : "");
+                        data.put("sexual_prefs", dataSnapshot.hasChild("sexual_prefs") ? dataSnapshot.child("sexual_prefs").getValue().toString() : "");
+                        data.put("ethnicity", dataSnapshot.hasChild("ethnicity") ? dataSnapshot.child("ethnicity").getValue().toString() : "");
+                        data.put("smoking", dataSnapshot.hasChild("smoking") ? dataSnapshot.child("smoking").getValue().toString() : "");
 
 
-                    JSONObject jsonObject = new JSONObject(data);
-                    Card card = null;
-                    try {
-                        card = new Card(jsonObject);
-                        cards.add(card);
-                        TinderCard tc =  new TinderCard(getActivity(), card, mSwipeView);
-                        tc.addPropertyChangeListener(Profiles.this);
-                        mSwipeView.addView(tc);
-                      //  getActivity().setTitle(card.getDisplay_name());
-                    } catch (IllegalAccessException e) {
-                        e.printStackTrace();
+                        JSONObject jsonObject = new JSONObject(data);
+                        Card card = null;
+                        try {
+                            card = new Card(jsonObject);
+                            cards.add(card);
+                            TinderCard tc = new TinderCard(getActivity(), card, mSwipeView);
+                            tc.addPropertyChangeListener(Profiles.this);
+                            mSwipeView.addView(tc);
+                            //  getActivity().setTitle(card.getDisplay_name());
+                        } catch (IllegalAccessException e) {
+                            e.printStackTrace();
+                        }
+                    } else {
+                        DatabaseReference  ref  =    FirebaseDatabase.getInstance().getReference().child("users").child("connections");
+
+                        final List<String> connections  = new ArrayList<>();
+                        ref.child("yep").addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                    for (DataSnapshot entrySnapshot : dataSnapshot.getChildren()) {
+                                        for (DataSnapshot propertySnapshot : entrySnapshot.getChildren()) {
+                                            //  Toast.makeText(mContext, propertySnapshot.getValue(String.class), Toast.LENGTH_LONG).show();
+                                            connections.add(propertySnapshot.getKey());
+
+                                        }
+                                    }
+                                    if(!connections.contains(user.getUid())){
+                                        Map<String, String> data = new HashMap<>();
+                                        data.put("uuid", dataSnapshot.getKey());
+                                        data.put("display_name", dataSnapshot.hasChild("display_name") ? dataSnapshot.child("display_name").getValue().toString() : "");
+                                        data.put("drinking", dataSnapshot.hasChild("drinking") ? dataSnapshot.child("drinking").getValue().toString() : "");
+                                        data.put("age", dataSnapshot.hasChild("display_name") ? dataSnapshot.child("display_name").getValue().toString() : "");
+                                        data.put("body_part", dataSnapshot.hasChild("display_name") ? dataSnapshot.child("display_name").getValue().toString() : "");
+                                        data.put("build", dataSnapshot.hasChild("build") ? dataSnapshot.child("build").getValue().toString() : "");
+                                        data.put("country", dataSnapshot.hasChild("country") ? dataSnapshot.child("country").getValue().toString() : "");
+                                        data.put("about_me", dataSnapshot.hasChild("about_me") ? dataSnapshot.child("about_me").getValue().toString() : "");
+                                        data.put("gender", dataSnapshot.hasChild("gender") ? dataSnapshot.child("gender").getValue().toString() : "");
+                                        data.put("hair_color", dataSnapshot.hasChild("hair_color") ? dataSnapshot.child("hair_color").getValue().toString() : "");
+                                        data.put("marital_status", dataSnapshot.hasChild("marital_status") ? dataSnapshot.child("marital_status").getValue().toString() : "");
+                                        data.put("name", dataSnapshot.hasChild("name") ? dataSnapshot.child("name").getValue().toString() : "");
+                                        data.put("referred_by", dataSnapshot.hasChild("referred_by") ? dataSnapshot.child("referred_by").getValue().toString() : "");
+                                        data.put("sexual_prefs", dataSnapshot.hasChild("sexual_prefs") ? dataSnapshot.child("sexual_prefs").getValue().toString() : "");
+                                        data.put("ethnicity", dataSnapshot.hasChild("ethnicity") ? dataSnapshot.child("ethnicity").getValue().toString() : "");
+                                        data.put("smoking", dataSnapshot.hasChild("smoking") ? dataSnapshot.child("smoking").getValue().toString() : "");
+
+
+                                        JSONObject jsonObject = new JSONObject(data);
+                                        Card card = null;
+                                        try {
+                                            card = new Card(jsonObject);
+                                            cards.add(card);
+                                            TinderCard tc = new TinderCard(getActivity(), card, mSwipeView);
+                                            tc.addPropertyChangeListener(Profiles.this);
+                                            mSwipeView.addView(tc);
+                                            //  getActivity().setTitle(card.getDisplay_name());
+                                        } catch (IllegalAccessException e) {
+                                            e.printStackTrace();
+                                        }
+                                    }
+
+
+
+
+                                }
+
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                }
+                            });
+
+
+
                     }
 
                 }
+
             }
 
             @Override
