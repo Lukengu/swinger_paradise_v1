@@ -4,7 +4,9 @@ package swingersparadise.app.solutions.novatech.pro.swingersparadise.main.view;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.net.Uri;
+import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -12,6 +14,7 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -34,6 +37,7 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 
+import swingersparadise.app.solutions.novatech.pro.swingersparadise.ProfileView;
 import swingersparadise.app.solutions.novatech.pro.swingersparadise.R;
 import swingersparadise.app.solutions.novatech.pro.swingersparadise.main.adapters.AlbumAdapter;
 import swingersparadise.app.solutions.novatech.pro.swingersparadise.main.entities.Card;
@@ -67,6 +71,9 @@ public class TinderCard implements android.view.View.OnClickListener {
 
     @View(R.id.back_to_profile)
     private ImageView back_to_profile;
+
+    @View(R.id.view_profile)
+    private ImageView view_profile;
 
    // @View(R.id.swiperefresh)
     //private android.support.v4.widget.SwipeRefreshLayout swiperefresh;
@@ -144,6 +151,7 @@ public class TinderCard implements android.view.View.OnClickListener {
         connect_yes.setOnClickListener(this);
         unlock_action.setOnClickListener(this);
         back_to_profile.setOnClickListener(this);
+        view_profile.setOnClickListener(this);
 
 
 
@@ -246,9 +254,14 @@ public class TinderCard implements android.view.View.OnClickListener {
 
                 alertDialog.show();
                 break;
+            case R.id.view_profile:
+                //Toast.makeText(mContext, "clicked", Toast.LENGTH_LONG).show();
+                Bundle bundle  = new Bundle();
+                bundle.putSerializable("card", mCard);
+
+                mContext.startActivity(new Intent(mContext, ProfileView.class).putExtras(bundle));
+                break;
         }
     }
-    public Card getCard(){
-        return mCard;
-    }
+
 }

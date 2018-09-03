@@ -87,7 +87,7 @@ public class Profiles extends Fragment implements PropertyChangeListener{
 
         //mSwipeView.onViewAdded();
 
-        getActivity().setTitle(cards.get(cards.size() - 1 ).getDisplay_name());
+
 
 
 
@@ -140,6 +140,7 @@ public class Profiles extends Fragment implements PropertyChangeListener{
                         TinderCard tc =  new TinderCard(getActivity(), card, mSwipeView);
                         tc.addPropertyChangeListener(Profiles.this);
                         mSwipeView.addView(tc);
+                      //  getActivity().setTitle(card.getDisplay_name());
                     } catch (IllegalAccessException e) {
                         e.printStackTrace();
                     }
@@ -179,6 +180,6 @@ public class Profiles extends Fragment implements PropertyChangeListener{
        //mSwipeView.get
 
         int index = cards.indexOf(c);
-        getActivity().setTitle(cards.get(index - 1 ).getDisplay_name());
+        getActivity().setTitle(cards.get(index + 1 ).getDisplay_name());
     }
 }

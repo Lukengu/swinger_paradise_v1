@@ -4,6 +4,7 @@ import org.json.JSONObject;
 
 import java.io.Serializable;
 import java.lang.reflect.Field;
+import java.util.Map;
 
 public class Card implements Serializable {
 
@@ -150,4 +151,6 @@ public class Card implements Serializable {
     public void setSmoking(String smoking) {
         this.smoking = smoking;
     }
+
+
 }
