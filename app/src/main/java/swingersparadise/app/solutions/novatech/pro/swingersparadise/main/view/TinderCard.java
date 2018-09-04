@@ -14,6 +14,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -125,14 +126,16 @@ public class TinderCard implements android.view.View.OnClickListener {
     private DatabaseReference albums_db;
     private SharedPreferences spref;
     private SharedPreferences.Editor editor;
+    private Fragment parent;
 
     public static final String PREFERENCE= "tinder_card";
 
 
-    public TinderCard(Context context, Card card, SwipePlaceHolderView swipeView) {
+    public TinderCard(Context context, Card card, SwipePlaceHolderView swipeView,Fragment parent) {
         mContext = context;
         mCard = card;
         mSwipeView = swipeView;
+        this.parent = parent;
 
 
 
@@ -187,7 +190,7 @@ public class TinderCard implements android.view.View.OnClickListener {
         );*/
 
 
-
+        parent.getActivity().setTitle(mCard.getDisplay_name());
         connect_no.setOnClickListener(this);
         connect_yes.setOnClickListener(this);
         unlock_action.setOnClickListener(this);
@@ -361,7 +364,8 @@ public class TinderCard implements android.view.View.OnClickListener {
         user_db.child(mCard.getUuid()).child("connections").child("nope").child(firebaseAuth.getCurrentUser().getUid()).setValue("true");
 
         mSwipeView.addView(this);
-        changes.firePropertyChange("mCard",null, mCard);
+        //changes.firePropertyChange("mCard",null, mCard);
+        parent.getActivity().setTitle(mCard.getDisplay_name());
     }
 
     @SwipeCancelState
@@ -374,7 +378,8 @@ public class TinderCard implements android.view.View.OnClickListener {
         Log.d("EVENT", "onSwipedIn");
         // user_db.child(mCard.getOpposite_gender()).child(mCard.getUuid()).child("Connections").child("Yep").child(firebaseAuth.getCurrentUser().getUid()).setValue("true");
         user_db.child(mCard.getUuid()).child("connections").child("yep").child(firebaseAuth.getCurrentUser().getUid()).setValue("true");
-        changes.firePropertyChange("mCard",null, mCard);
+        //changes.firePropertyChange("mCard",null, mCard);
+        parent.getActivity().setTitle(mCard.getDisplay_name());
 
     }
 
@@ -393,14 +398,7 @@ public class TinderCard implements android.view.View.OnClickListener {
 
 
 
-    public void addPropertyChangeListener(
-            PropertyChangeListener l) {
-        changes.addPropertyChangeListener(l);
-    }
-    public void removePropertyChangeListener(
-            PropertyChangeListener l) {
-        changes.removePropertyChangeListener(l);
-    }
+
 
     @Override
     public void onClick(android.view.View view) {

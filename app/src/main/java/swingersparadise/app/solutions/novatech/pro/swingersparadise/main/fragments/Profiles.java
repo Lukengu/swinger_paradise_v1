@@ -140,9 +140,8 @@ public class Profiles extends Fragment implements PropertyChangeListener{
                         try {
                             card = new Card(jsonObject);
                             cards.add(card);
-                            TinderCard tc = new TinderCard(getActivity(), card, mSwipeView);
-                            tc.addPropertyChangeListener(Profiles.this);
-                            mSwipeView.addView(tc);
+                            mSwipeView.addView( new TinderCard(getActivity(), card, mSwipeView, Profiles.this));
+
                             //  getActivity().setTitle(card.getDisplay_name());
                         } catch (IllegalAccessException e) {
                             e.printStackTrace();
@@ -186,9 +185,7 @@ public class Profiles extends Fragment implements PropertyChangeListener{
                                         try {
                                             card = new Card(jsonObject);
                                             cards.add(card);
-                                            TinderCard tc = new TinderCard(getActivity(), card, mSwipeView);
-                                            tc.addPropertyChangeListener(Profiles.this);
-                                            mSwipeView.addView(tc);
+                                            mSwipeView.addView( new TinderCard(getActivity(), card, mSwipeView, Profiles.this));
                                             //  getActivity().setTitle(card.getDisplay_name());
                                         } catch (IllegalAccessException e) {
                                             e.printStackTrace();
