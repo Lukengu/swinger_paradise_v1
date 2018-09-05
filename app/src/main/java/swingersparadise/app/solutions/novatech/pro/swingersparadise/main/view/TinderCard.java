@@ -219,16 +219,15 @@ public class TinderCard implements android.view.View.OnClickListener {
         user_db.child(mCard.getUuid()).addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-                if(dataSnapshot.exists() && dataSnapshot.hasChild("favorites")){
-                    user_db.child(mCard.getUuid()).child("favorites").addChildEventListener(new ChildEventListener() {
+                if(dataSnapshot.getKey().equals("favorites")){
+                    DatabaseReference ref  = user_db.child(mCard.getUuid()).child("favorites");
+                    ref.addChildEventListener(new ChildEventListener() {
                         @Override
                         public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                            Toast.makeText(mContext, dataSnapshot.getKey(), Toast.LENGTH_LONG).show();
                             if(dataSnapshot.getKey().equals(firebaseAuth.getCurrentUser().getUid())) {
-
-                                favorite_btn.setEnabled(true);
+                              favorite_btn.setChecked(true);
                             }
+
                         }
 
                         @Override
@@ -274,19 +273,19 @@ public class TinderCard implements android.view.View.OnClickListener {
 
             }
         });
+
     }
     private void checkFriendship(){
-        user_db.child(mCard.getUuid()).addChildEventListener(new ChildEventListener() {
 
+        user_db.child(mCard.getUuid()).addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-                if(dataSnapshot.hasChild("friends")){
-                    user_db.child(mCard.getUuid()).child("friends").addChildEventListener(new ChildEventListener() {
+                if(dataSnapshot.getKey().equals("friends")){
+                    DatabaseReference ref  = user_db.child(mCard.getUuid()).child("friends");
+                    ref.addChildEventListener(new ChildEventListener() {
                         @Override
                         public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                            Toast.makeText(mContext, dataSnapshot.getKey(), Toast.LENGTH_LONG).show();
-                            if(dataSnapshot.getKey().equals(firebaseAuth.getCurrentUser().getUid())){
+                            if(dataSnapshot.getKey().equals(firebaseAuth.getCurrentUser().getUid())) {
                                 String friendship = dataSnapshot.getValue().toString();
                                 if(friendship.equals("false")) {
                                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -302,9 +301,8 @@ public class TinderCard implements android.view.View.OnClickListener {
                                         friend_request.setImageDrawable(mContext.getResources().getDrawable(R.drawable.ic_person_pin_green_24dp));
                                     }
                                 }
-
-
                             }
+
                         }
 
                         @Override
@@ -327,7 +325,6 @@ public class TinderCard implements android.view.View.OnClickListener {
 
                         }
                     });
-
                 }
             }
 
@@ -351,6 +348,8 @@ public class TinderCard implements android.view.View.OnClickListener {
 
             }
         });
+
+
 
 
     }
