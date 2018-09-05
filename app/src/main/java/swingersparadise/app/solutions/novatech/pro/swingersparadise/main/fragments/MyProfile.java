@@ -172,21 +172,60 @@ public class MyProfile extends Fragment {
 
 
                         display_name.setText(dataSnapshot.child("display_name").getValue().toString());
-                        age.setText(dataSnapshot.child("age").getValue().toString());
-                        gender.setSelection(getPosition(dataSnapshot.child("gender").getValue().toString(), getActivity().getResources().getStringArray(R.array.gender)), true);
-                        marital_status.setSelection(getPosition(dataSnapshot.child("marital_status").getValue().toString(), getActivity().getResources().getStringArray(R.array.marital_status)), true);
-                        build.setSelection(getPosition(dataSnapshot.child("build").getValue().toString(), getActivity().getResources().getStringArray(R.array.build)), true);
-                        ethnicity.setSelection(getPosition(dataSnapshot.child("ethnicity").getValue().toString(), getActivity().getResources().getStringArray(R.array.ethnicity)), true);
-                        body_part.setSelection(getPosition(dataSnapshot.child("body_part").getValue().toString(), getActivity().getResources().getStringArray(R.array.body_part)), true);
-                        hair_colour.setSelection(getPosition(dataSnapshot.child("hair_color").getValue().toString(), getActivity().getResources().getStringArray(R.array.hair_colour)), true);
-                        smoking.setSelection(getPosition(dataSnapshot.child("smoking").getValue().toString(), getActivity().getResources().getStringArray(R.array.smoking)), true);
-                        drinking.setSelection(getPosition(dataSnapshot.child("driking").getValue().toString(), getActivity().getResources().getStringArray(R.array.drinking)), true);
-                        about_me.setText(dataSnapshot.child("about_me").getValue().toString());
+                        try {
+                            age.setText(dataSnapshot.child("age").getValue().toString());
+                        } catch(NullPointerException e){}
+
+                        try {
+                            age.setText(dataSnapshot.child("age").getValue().toString());
+                        } catch(NullPointerException e){}
+
+                        try {
+                            gender.setSelection(getPosition(dataSnapshot.child("gender").getValue().toString(), getActivity().getResources().getStringArray(R.array.gender)), true);
+                        } catch(NullPointerException e){}
+                        try {
+                            marital_status.setSelection(getPosition(dataSnapshot.child("marital_status").getValue().toString(), getActivity().getResources().getStringArray(R.array.marital_status)), true);
+                        } catch(NullPointerException e){}
+
+                        try {
+                            build.setSelection(getPosition(dataSnapshot.child("build").getValue().toString(), getActivity().getResources().getStringArray(R.array.build)), true);
+
+                        } catch(NullPointerException e){}
+
+                        try {
+                            ethnicity.setSelection(getPosition(dataSnapshot.child("ethnicity").getValue().toString(), getActivity().getResources().getStringArray(R.array.ethnicity)), true);
+
+                        } catch(NullPointerException e){}
+
+                        try {
+                            body_part.setSelection(getPosition(dataSnapshot.child("body_part").getValue().toString(), getActivity().getResources().getStringArray(R.array.body_part)), true);
+
+                        } catch(NullPointerException e){}
+
+                        try {
+                            hair_colour.setSelection(getPosition(dataSnapshot.child("hair_color").getValue().toString(), getActivity().getResources().getStringArray(R.array.hair_colour)), true);
+
+                        } catch(NullPointerException e){}
+
+                        try {
+                            smoking.setSelection(getPosition(dataSnapshot.child("smoking").getValue().toString(), getActivity().getResources().getStringArray(R.array.smoking)), true);
+
+                        } catch(NullPointerException e){}
+                        try {
+
+                            drinking.setSelection(getPosition(dataSnapshot.child("drinking").getValue().toString(), getActivity().getResources().getStringArray(R.array.drinking)), true);
+
+                        } catch(NullPointerException e){}
+
                         try {
                             sexual_preferences.setSelection(dataSnapshot.child("sexual_prefs").getValue().toString().split(","));
                         } catch(NullPointerException e){
 
                         }
+                        try{
+                            about_me.setText(dataSnapshot.child("about_me").getValue().toString());
+
+                        } catch(NullPointerException e){}
 
 
                         StorageReference ref = FirebaseStorage.getInstance().getReference().child("profiles/" + user.getUid() );
