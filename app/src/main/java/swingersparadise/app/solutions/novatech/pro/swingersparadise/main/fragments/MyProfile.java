@@ -249,7 +249,6 @@ public class MyProfile extends Fragment {
                         sbView.setBackground(getActivity().getResources().getDrawable(R.drawable.snackbar_error));
                     }
                     snackbar.show();
-git
                     return;
                 }
 
