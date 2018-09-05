@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -105,110 +106,60 @@ public class Profiles extends Fragment implements PropertyChangeListener{
     }
 
     private void CardInfos() {
-
-
         DatabaseReference  users_db  =    FirebaseDatabase.getInstance().getReference().child("users");
+        final List<String> connections = new ArrayList<>();
+
         users_db.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                if(dataSnapshot.exists() && !dataSnapshot.getKey().equals(user.getUid()) ){
+                if(dataSnapshot.exists() && !dataSnapshot.getKey().equals(user.getUid()) ) {
+                    if (dataSnapshot.hasChild("connections")) {
+                       // Toast.makeText(getActivity(), dataSnapshot.getKey(), Toast.LENGTH_LONG).show();
+                        final String key = dataSnapshot.getKey();
 
-                    if(!dataSnapshot.hasChild("connections")) {
-                        Map<String, String> data = new HashMap<>();
-
-
-                        data.put("uuid", dataSnapshot.getKey());
-                        data.put("display_name", dataSnapshot.hasChild("display_name") ? dataSnapshot.child("display_name").getValue().toString() : "");
-                        data.put("drinking", dataSnapshot.hasChild("drinking") ? dataSnapshot.child("drinking").getValue().toString() : "");
-                        data.put("age", dataSnapshot.hasChild("display_name") ? dataSnapshot.child("display_name").getValue().toString() : "");
-                        data.put("body_part", dataSnapshot.hasChild("display_name") ? dataSnapshot.child("display_name").getValue().toString() : "");
-                        data.put("build", dataSnapshot.hasChild("build") ? dataSnapshot.child("build").getValue().toString() : "");
-                        data.put("country", dataSnapshot.hasChild("country") ? dataSnapshot.child("country").getValue().toString() : "");
-                        data.put("about_me", dataSnapshot.hasChild("about_me") ? dataSnapshot.child("about_me").getValue().toString() : "");
-                        data.put("gender", dataSnapshot.hasChild("gender") ? dataSnapshot.child("gender").getValue().toString() : "");
-                        data.put("hair_color", dataSnapshot.hasChild("hair_color") ? dataSnapshot.child("hair_color").getValue().toString() : "");
-                        data.put("marital_status", dataSnapshot.hasChild("marital_status") ? dataSnapshot.child("marital_status").getValue().toString() : "");
-                        data.put("name", dataSnapshot.hasChild("name") ? dataSnapshot.child("name").getValue().toString() : "");
-                        data.put("referred_by", dataSnapshot.hasChild("referred_by") ? dataSnapshot.child("referred_by").getValue().toString() : "");
-                        data.put("sexual_prefs", dataSnapshot.hasChild("sexual_prefs") ? dataSnapshot.child("sexual_prefs").getValue().toString() : "");
-                        data.put("ethnicity", dataSnapshot.hasChild("ethnicity") ? dataSnapshot.child("ethnicity").getValue().toString() : "");
-                        data.put("smoking", dataSnapshot.hasChild("smoking") ? dataSnapshot.child("smoking").getValue().toString() : "");
-
-
-                        JSONObject jsonObject = new JSONObject(data);
-                        Card card = null;
-                        try {
-                            card = new Card(jsonObject);
-                            cards.add(card);
-                            mSwipeView.addView( new TinderCard(getActivity(), card, mSwipeView, Profiles.this));
-
-                            //  getActivity().setTitle(card.getDisplay_name());
-                        } catch (IllegalAccessException e) {
-                            e.printStackTrace();
-                        }
-                    } else {
-                        DatabaseReference  ref  =    FirebaseDatabase.getInstance().getReference().child("users").child("connections");
-
+                        DatabaseReference  ref  =    FirebaseDatabase.getInstance().getReference().child("users").child(key).child("connections").child("yep");
                         final List<String> connections  = new ArrayList<>();
-                        ref.child("yep").addListenerForSingleValueEvent(new ValueEventListener() {
-                                @Override
-                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                    for (DataSnapshot entrySnapshot : dataSnapshot.getChildren()) {
-                                        for (DataSnapshot propertySnapshot : entrySnapshot.getChildren()) {
-                                            //  Toast.makeText(mContext, propertySnapshot.getValue(String.class), Toast.LENGTH_LONG).show();
-                                            connections.add(propertySnapshot.getKey());
-
-                                        }
-                                    }
-                                    if(!connections.contains(user.getUid())){
-                                        Map<String, String> data = new HashMap<>();
-                                        data.put("uuid", dataSnapshot.getKey());
-                                        data.put("display_name", dataSnapshot.hasChild("display_name") ? dataSnapshot.child("display_name").getValue().toString() : "");
-                                        data.put("drinking", dataSnapshot.hasChild("drinking") ? dataSnapshot.child("drinking").getValue().toString() : "");
-                                        data.put("age", dataSnapshot.hasChild("display_name") ? dataSnapshot.child("display_name").getValue().toString() : "");
-                                        data.put("body_part", dataSnapshot.hasChild("display_name") ? dataSnapshot.child("display_name").getValue().toString() : "");
-                                        data.put("build", dataSnapshot.hasChild("build") ? dataSnapshot.child("build").getValue().toString() : "");
-                                        data.put("country", dataSnapshot.hasChild("country") ? dataSnapshot.child("country").getValue().toString() : "");
-                                        data.put("about_me", dataSnapshot.hasChild("about_me") ? dataSnapshot.child("about_me").getValue().toString() : "");
-                                        data.put("gender", dataSnapshot.hasChild("gender") ? dataSnapshot.child("gender").getValue().toString() : "");
-                                        data.put("hair_color", dataSnapshot.hasChild("hair_color") ? dataSnapshot.child("hair_color").getValue().toString() : "");
-                                        data.put("marital_status", dataSnapshot.hasChild("marital_status") ? dataSnapshot.child("marital_status").getValue().toString() : "");
-                                        data.put("name", dataSnapshot.hasChild("name") ? dataSnapshot.child("name").getValue().toString() : "");
-                                        data.put("referred_by", dataSnapshot.hasChild("referred_by") ? dataSnapshot.child("referred_by").getValue().toString() : "");
-                                        data.put("sexual_prefs", dataSnapshot.hasChild("sexual_prefs") ? dataSnapshot.child("sexual_prefs").getValue().toString() : "");
-                                        data.put("ethnicity", dataSnapshot.hasChild("ethnicity") ? dataSnapshot.child("ethnicity").getValue().toString() : "");
-                                        data.put("smoking", dataSnapshot.hasChild("smoking") ? dataSnapshot.child("smoking").getValue().toString() : "");
+                        ref.addChildEventListener(new ChildEventListener() {
+                            @Override
+                            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                               if(dataSnapshot.getKey().equals(user.getUid())){
+                                   Toast.makeText(getActivity(),key, Toast.LENGTH_LONG).show();
+                                   connections.add(key);
+                               }
 
 
-                                        JSONObject jsonObject = new JSONObject(data);
-                                        Card card = null;
-                                        try {
-                                            card = new Card(jsonObject);
-                                            cards.add(card);
-                                            mSwipeView.addView( new TinderCard(getActivity(), card, mSwipeView, Profiles.this));
-                                            //  getActivity().setTitle(card.getDisplay_name());
-                                        } catch (IllegalAccessException e) {
-                                            e.printStackTrace();
-                                        }
-                                    }
+                            }
+
+                            @Override
+                            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+                            }
+
+                            @Override
+                            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+
+                            }
+
+                            @Override
+                            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                            }
+                        });
+                    }
+
+                    Toast.makeText(getActivity(),"" +connections.indexOf(dataSnapshot.getKey()), Toast.LENGTH_LONG).show();
 
 
-
-
-                                }
-
-                                @Override
-                                public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                                }
-                            });
-
-
+                    if(!connections.contains(dataSnapshot.getKey())){
 
                     }
 
                 }
-
             }
 
             @Override
