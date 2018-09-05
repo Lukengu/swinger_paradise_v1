@@ -43,11 +43,12 @@ import swingersparadise.app.solutions.novatech.pro.swingersparadise.main.entitie
 import swingersparadise.app.solutions.novatech.pro.swingersparadise.main.view.TinderCard;
 import swingersparadise.app.solutions.novatech.pro.swingersparadise.utils.MeasureUtils;
 
-public class Profiles extends Fragment implements PropertyChangeListener{
+public class Profiles extends Fragment{
 
     private SwipePlaceHolderView mSwipeView;
     RecyclerView mRecyclerView;
-    List<Card> cards = new ArrayList<>();
+    List<String> connections  = new ArrayList<>();
+    private List<Card> cards = new ArrayList<>();
 
 
    // private ImageButton rejectBtn,acceptBtn;
@@ -106,88 +107,16 @@ public class Profiles extends Fragment implements PropertyChangeListener{
     }
 
     private void CardInfos() {
-        DatabaseReference  users_db  =    FirebaseDatabase.getInstance().getReference().child("users");
-        final List<String> connections = new ArrayList<>();
 
-        users_db.addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                if(dataSnapshot.exists() && !dataSnapshot.getKey().equals(user.getUid()) ) {
-                    if (dataSnapshot.hasChild("connections")) {
-                       // Toast.makeText(getActivity(), dataSnapshot.getKey(), Toast.LENGTH_LONG).show();
-                        final String key = dataSnapshot.getKey();
-
-                        DatabaseReference  ref  =    FirebaseDatabase.getInstance().getReference().child("users").child(key).child("connections").child("yep");
-                        final List<String> connections  = new ArrayList<>();
-                        ref.addChildEventListener(new ChildEventListener() {
-                            @Override
-                            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                               if(dataSnapshot.getKey().equals(user.getUid())){
-                                   Toast.makeText(getActivity(),key, Toast.LENGTH_LONG).show();
-                                   connections.add(key);
-                               }
+        final DatabaseReference  users_db  =    FirebaseDatabase.getInstance().getReference().child("users");
 
 
-                            }
-
-                            @Override
-                            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-                            }
-
-                            @Override
-                            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
-
-                            }
-
-                            @Override
-                            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-                            }
-
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                            }
-                        });
-                    }
-
-                    Toast.makeText(getActivity(),"" +connections.indexOf(dataSnapshot.getKey()), Toast.LENGTH_LONG).show();
-
-
-                    if(!connections.contains(dataSnapshot.getKey())){
-
-                    }
-
-                }
-            }
-
-            @Override
-            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-            }
-
-            @Override
-            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
 
 
     }
 
 
-    @Override
+    /*@Override
     public void propertyChange(PropertyChangeEvent propertyChangeEvent) {
         Card c = (Card) propertyChangeEvent.getNewValue();
        // getActivity().setTitle(c.getDisplay_name());
@@ -195,5 +124,5 @@ public class Profiles extends Fragment implements PropertyChangeListener{
 
         int index = cards.indexOf(c);
         getActivity().setTitle(cards.get(index + 1 ).getDisplay_name());
-    }
+    }*/
 }
