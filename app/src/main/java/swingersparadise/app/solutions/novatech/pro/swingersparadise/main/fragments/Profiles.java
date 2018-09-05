@@ -49,6 +49,7 @@ public class Profiles extends Fragment{
     RecyclerView mRecyclerView;
     List<String> connections  = new ArrayList<>();
     private List<Card> cards = new ArrayList<>();
+    private DatabaseReference  users_db  =    FirebaseDatabase.getInstance().getReference().child("users");
 
 
    // private ImageButton rejectBtn,acceptBtn;
@@ -62,7 +63,7 @@ public class Profiles extends Fragment{
 
         mSwipeView = view.findViewById(R.id.swipeView);
         mRecyclerView = view.findViewById(R.id.recycle_view);
-
+        user = FirebaseAuth.getInstance().getCurrentUser();
 
 
 
@@ -76,7 +77,7 @@ public class Profiles extends Fragment{
         int bottomMargin = MeasureUtils.dpToPx(80);
 
 
-        user = FirebaseAuth.getInstance().getCurrentUser();
+
         mSwipeView.getBuilder()
                 .setDisplayViewCount(6)
                 .setSwipeDecor(new SwipeDecor()
@@ -107,22 +108,80 @@ public class Profiles extends Fragment{
     }
 
     private void CardInfos() {
+        users_db.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                if(dataSnapshot.exists() && !dataSnapshot.getKey().equals(user.getUid())){
+                    boolean exclude = false;
 
-        final DatabaseReference  users_db  =    FirebaseDatabase.getInstance().getReference().child("users");
+                    if( dataSnapshot.hasChild("connections") ){
+                        for  ( DataSnapshot  ds : dataSnapshot.child("connections").child("yep").getChildren()){
+                            if(ds.getKey().equals(user.getUid())){
+                                exclude = true;
+                            }
+                        }
+                    }
+
+                    if(!exclude){
+                        Map<String, String> data = new HashMap<>();
 
 
+                        data.put("uuid", dataSnapshot.getKey());
+                        data.put("display_name", dataSnapshot.hasChild("display_name") ? dataSnapshot.child("display_name").getValue().toString() : "");
+                        data.put("drinking", dataSnapshot.hasChild("drinking") ? dataSnapshot.child("drinking").getValue().toString() : "");
+                        data.put("age", dataSnapshot.hasChild("display_name") ? dataSnapshot.child("display_name").getValue().toString() : "");
+                        data.put("body_part", dataSnapshot.hasChild("display_name") ? dataSnapshot.child("display_name").getValue().toString() : "");
+                        data.put("build", dataSnapshot.hasChild("build") ? dataSnapshot.child("build").getValue().toString() : "");
+                        data.put("country", dataSnapshot.hasChild("country") ? dataSnapshot.child("country").getValue().toString() : "");
+                        data.put("about_me", dataSnapshot.hasChild("about_me") ? dataSnapshot.child("about_me").getValue().toString() : "");
+                        data.put("gender", dataSnapshot.hasChild("gender") ? dataSnapshot.child("gender").getValue().toString() : "");
+                        data.put("hair_color", dataSnapshot.hasChild("hair_color") ? dataSnapshot.child("hair_color").getValue().toString() : "");
+                        data.put("marital_status", dataSnapshot.hasChild("marital_status") ? dataSnapshot.child("marital_status").getValue().toString() : "");
+                        data.put("name", dataSnapshot.hasChild("name") ? dataSnapshot.child("name").getValue().toString() : "");
+                        data.put("referred_by", dataSnapshot.hasChild("referred_by") ? dataSnapshot.child("referred_by").getValue().toString() : "");
+                        data.put("sexual_prefs", dataSnapshot.hasChild("sexual_prefs") ? dataSnapshot.child("sexual_prefs").getValue().toString() : "");
+                        data.put("ethnicity", dataSnapshot.hasChild("ethnicity") ? dataSnapshot.child("ethnicity").getValue().toString() : "");
+                        data.put("smoking", dataSnapshot.hasChild("smoking") ? dataSnapshot.child("smoking").getValue().toString() : "");
 
+
+                        JSONObject jsonObject = new JSONObject(data);
+                        Card card = null;
+                        try {
+                            card = new Card(jsonObject);
+                            cards.add(card);
+                            mSwipeView.addView(new TinderCard(getActivity(), card, mSwipeView, Profiles.this));
+
+                            //  getActivity().setTitle(card.getDisplay_name());
+                        } catch (IllegalAccessException e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                }
+
+            }
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
 
     }
 
-
-    /*@Override
-    public void propertyChange(PropertyChangeEvent propertyChangeEvent) {
-        Card c = (Card) propertyChangeEvent.getNewValue();
-       // getActivity().setTitle(c.getDisplay_name());
-       //mSwipeView.get
-
-        int index = cards.indexOf(c);
-        getActivity().setTitle(cards.get(index + 1 ).getDisplay_name());
-    }*/
 }
