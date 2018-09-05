@@ -551,7 +551,7 @@ public class TinderCard implements android.view.View.OnClickListener {
 
                 break;
             case R.id.favorite_btn:
-                if(favorite_btn.isEnabled()) {
+                if(favorite_btn.isChecked()) {
                     user_db.child(mCard.getUuid()).child("favorites").child(firebaseAuth.getCurrentUser().getUid()).setValue("true");
                 } else {
                     user_db.child(mCard.getUuid()).child("favorites").child(firebaseAuth.getCurrentUser().getUid()).removeValue();

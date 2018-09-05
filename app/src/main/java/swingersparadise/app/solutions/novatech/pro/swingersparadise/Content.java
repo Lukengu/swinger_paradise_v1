@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
@@ -36,6 +37,7 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Map;
 
+import swingersparadise.app.solutions.novatech.pro.swingersparadise.main.entities.Card;
 import swingersparadise.app.solutions.novatech.pro.swingersparadise.main.fragments.Profiles;
 import swingersparadise.app.solutions.novatech.pro.swingersparadise.main.fragments.Matches;
 import swingersparadise.app.solutions.novatech.pro.swingersparadise.main.fragments.MyProfile;
@@ -51,6 +53,8 @@ public class Content extends AppCompatActivity
     private FirebaseAuth.AuthStateListener authStateListener;
     private FirebaseUser currentUser;
     private DatabaseReference users_db;
+    private JSONObject myprofile;
+    private BottomNavigationView bottom_navigation;
 
 
 
@@ -83,6 +87,9 @@ public class Content extends AppCompatActivity
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
+
+      //  bottom_navigation = findViewById(R.id.bottom_navigation);
+
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
@@ -155,8 +162,8 @@ public class Content extends AppCompatActivity
 
                         }*/
 
-                        JSONObject jsonObject = new JSONObject(data);
-                        display_name.setText("Welcome "+ jsonObject.optString("display_name"));
+                        myprofile = new JSONObject(data);
+                        display_name.setText("Welcome "+ myprofile.optString("display_name"));
 
                         PushNotifications.start(Content.this, getString(R.string.pusher_instance_id));
                         PushNotifications.subscribe(currentUser.getUid());
@@ -230,14 +237,17 @@ public class Content extends AppCompatActivity
 
             int id = item.getItemId();
             editor.remove("selected_menu").commit();
-
+//            bottom_navigation.setVisibility(View.VISIBLE);
 
             switch (id) {
                 case R.id.nav_profile:
+                    Bundle bundle = new Bundle();
                     editor.putInt("selected_menu", R.id.nav_profile).commit();
                     loadFragment("profile", null);
+
                     break;
                 case R.id.nav_discover:
+                 //   bottom_navigation.setVisibility(View.INVISIBLE);
                     editor.putInt("selected_menu", R.id.nav_discover).commit();
                     loadFragment("discover", null);
                     break;
@@ -273,7 +283,7 @@ public class Content extends AppCompatActivity
 
             // insert detail fragment into detail container
             f = new MyProfile();
-            setTitle("Profile");
+            setTitle("My Profile");
 
         }
         if( "matches".equals(name)){

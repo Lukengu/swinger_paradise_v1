@@ -36,7 +36,7 @@ public class ContentOLD extends AppCompatActivity {
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             switch (item.getItemId()) {
-                case R.id.navigation_home:
+             /*   case R.id.navigation_home:
                     mTextMessage.setText(R.string.title_home);
                     return true;
                 case R.id.navigation_dashboard:
@@ -45,12 +45,7 @@ public class ContentOLD extends AppCompatActivity {
                 case R.id.navigation_notifications:
                     mTextMessage.setText(R.string.title_notifications);
                     return true;
-                case R.id.navigation_logout:
-                    mAuth.signOut();
-                    startActivity(new Intent(ContentOLD.this, Login.class));
-                    finish();
-                    return true;
-
+                */
             }
             return false;
         }

@@ -30,7 +30,11 @@ public class Card implements Serializable {
     public Card(JSONObject data) throws IllegalAccessException {
         for(Field f : Card.class.getDeclaredFields()){
             if(f.getType() == String.class) {
-                f.set(this, data.optString(f.getName()));
+                try {
+                    f.set(this, data.optString(f.getName()));
+                }catch(NullPointerException e){
+
+                }
             }
             if(f.getType() == Integer.class) {
                 f.set(this, data.optInt(f.getName()));
