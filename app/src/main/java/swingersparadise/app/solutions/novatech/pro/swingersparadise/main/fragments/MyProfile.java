@@ -1,6 +1,7 @@
 package swingersparadise.app.solutions.novatech.pro.swingersparadise.main.fragments;
 
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -100,10 +101,10 @@ public class MyProfile extends Fragment {
                 getActivity().getResources().getStringArray(R.array.build));
         build.setAdapter(adapter);
 
-/*        adapter = new ArrayAdapter<>(getActivity(), R.layout.spinner_textview_no_bg,
+       adapter = new ArrayAdapter<>(getActivity(), R.layout.spinner_textview_no_bg,
                 getActivity().getResources().getStringArray(R.array.ethnicity));
         ethnicity.setAdapter(adapter);
-*/
+
         adapter = new ArrayAdapter<>(getActivity(), R.layout.spinner_textview_no_bg,
                 getActivity().getResources().getStringArray(R.array.body_part));
         body_part.setAdapter(adapter);
@@ -143,14 +144,127 @@ public class MyProfile extends Fragment {
                     return;
                 }
                 if(gender.getSelectedItem().toString().equals("Gender")){
-                    Snackbar.make(parent, "Profile Saved", Snackbar.LENGTH_LONG).show();
+                    Snackbar snackbar = Snackbar.make(parent, "Wrong Gender ", Snackbar.LENGTH_LONG);
+                    View sbView = snackbar.getView();
+
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                        sbView.setBackground(getActivity().getDrawable(R.drawable.snackbar_error));
+                    } else {
+                        sbView.setBackground(getActivity().getResources().getDrawable(R.drawable.snackbar_error));
+                    }
+                    snackbar.show();
+
+                    return;
+                }
+                if(marital_status.getSelectedItem().toString().equals("Marital Status")){
+                    Snackbar snackbar = Snackbar.make(parent, "Wrong Marital Status", Snackbar.LENGTH_LONG);
+                    View sbView = snackbar.getView();
+
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                        sbView.setBackground(getActivity().getDrawable(R.drawable.snackbar_error));
+                    } else {
+                        sbView.setBackground(getActivity().getResources().getDrawable(R.drawable.snackbar_error));
+                    }
+                    snackbar.show();
+
+                    return;
+                }
+
+                if(ethnicity.getSelectedItem().toString().equals("Ethnicity")){
+                    Snackbar snackbar = Snackbar.make(parent, "Wrong Ethnicity ", Snackbar.LENGTH_LONG);
+                    View sbView = snackbar.getView();
+
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                        sbView.setBackground(getActivity().getDrawable(R.drawable.snackbar_error));
+                    } else {
+                        sbView.setBackground(getActivity().getResources().getDrawable(R.drawable.snackbar_error));
+                    }
+                    snackbar.show();
+
+                    return;
+                }
+
+                if(body_part.getSelectedItem().toString().equals("Body Parts")){
+                    Snackbar snackbar = Snackbar.make(parent, "Wrong Body Parts ", Snackbar.LENGTH_LONG);
+                    View sbView = snackbar.getView();
+
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                        sbView.setBackground(getActivity().getDrawable(R.drawable.snackbar_error));
+                    } else {
+                        sbView.setBackground(getActivity().getResources().getDrawable(R.drawable.snackbar_error));
+                    }
+                    snackbar.show();
+
+                    return;
+                }
+
+                if(build.getSelectedItem().toString().equals("Build")){
+                    Snackbar snackbar = Snackbar.make(parent, "Wrong Build ", Snackbar.LENGTH_LONG);
+                    View sbView = snackbar.getView();
+
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                        sbView.setBackground(getActivity().getDrawable(R.drawable.snackbar_error));
+                    } else {
+                        sbView.setBackground(getActivity().getResources().getDrawable(R.drawable.snackbar_error));
+                    }
+                    snackbar.show();
+
+                    return;
+                }
+                if(hair_colour.getSelectedItem().toString().equals("Hair Colour")){
+                    Snackbar snackbar = Snackbar.make(parent, "Wrong Hair Colour ", Snackbar.LENGTH_LONG);
+                    View sbView = snackbar.getView();
+
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                        sbView.setBackground(getActivity().getDrawable(R.drawable.snackbar_error));
+                    } else {
+                        sbView.setBackground(getActivity().getResources().getDrawable(R.drawable.snackbar_error));
+                    }
+                    snackbar.show();
+
+                    return;
+                }
+
+                if(smoking.getSelectedItem().toString().equals("Smoking")){
+                    Snackbar snackbar = Snackbar.make(parent, "Wrong Smoking Status ", Snackbar.LENGTH_LONG);
+                    View sbView = snackbar.getView();
+
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                        sbView.setBackground(getActivity().getDrawable(R.drawable.snackbar_error));
+                    } else {
+                        sbView.setBackground(getActivity().getResources().getDrawable(R.drawable.snackbar_error));
+                    }
+                    snackbar.show();
+
+                    return;
+                }
+
+                if(smoking.getSelectedItem().toString().equals("Drinking")){
+                    Snackbar snackbar = Snackbar.make(parent, "Wrong Drinking Status ", Snackbar.LENGTH_LONG);
+                    View sbView = snackbar.getView();
+
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                        sbView.setBackground(getActivity().getDrawable(R.drawable.snackbar_error));
+                    } else {
+                        sbView.setBackground(getActivity().getResources().getDrawable(R.drawable.snackbar_error));
+                    }
+                    snackbar.show();
+git
                     return;
                 }
 
                 users_db.child(user.getUid()).child("display_name").setValue(display_name.getText().toString());
                 users_db.child(user.getUid()).child("age").setValue(age.getText().toString());
-                users_db.child(user.getUid()).child("age").setValue(age.getText().toString());
-
+                users_db.child(user.getUid()).child("gender").setValue(gender.getSelectedItem().toString());
+                users_db.child(user.getUid()).child("marital_status").setValue(marital_status.getSelectedItem().toString());
+                users_db.child(user.getUid()).child("ethnicity").setValue(ethnicity.getSelectedItem().toString());
+                users_db.child(user.getUid()).child("body_part").setValue(body_part.getSelectedItem().toString());
+                users_db.child(user.getUid()).child("build").setValue(build.getSelectedItem().toString());
+                users_db.child(user.getUid()).child("hair_color").setValue(hair_colour.getSelectedItem().toString());
+                users_db.child(user.getUid()).child("smoking").setValue(smoking.getSelectedItem().toString());
+                users_db.child(user.getUid()).child("drinking").setValue(drinking.getSelectedItem().toString());
+                users_db.child(user.getUid()).child("about_me").setValue(about_me.getText().toString());
+                users_db.child(user.getUid()).child("sexual_prefs").setValue(sexual_preferences.getSelectedItemsAsString());
 
 
                 Snackbar.make(parent, "Profile Saved", Snackbar.LENGTH_LONG).show();
