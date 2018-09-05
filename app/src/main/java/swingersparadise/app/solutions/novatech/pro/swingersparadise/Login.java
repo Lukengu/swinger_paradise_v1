@@ -372,8 +372,8 @@ public class Login extends Activity {
                                     users_db.child(user.getUid()).child("name").setValue(object.optString("name"));
                                     users_db.child(user.getUid()).child("email").setValue(object.optString("email"));
                                     users_db.child(user.getUid()).child("display_name").setValue(object.optString("email"));
-                                    users_db.child(user.getUid()).child("gender").setValue(object.optString("gender"));
-                                    users_db.child(user.getUid()).child("birthday").setValue(object.optString("birthday"));
+                                   // users_db.child(user.getUid()).child("gender").setValue(object.optString("gender"));
+                                    //users_db.child(user.getUid()).child("birthday").setValue(object.optString("birthday"));
                                     //Uri uri  = Uri.fromParts()
 
                                     new Thread( new Runnable(){

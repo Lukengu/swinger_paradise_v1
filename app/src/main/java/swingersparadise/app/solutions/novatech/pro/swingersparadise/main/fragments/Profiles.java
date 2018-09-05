@@ -1,5 +1,6 @@
 package swingersparadise.app.solutions.novatech.pro.swingersparadise.main.fragments;
 
+import android.app.ProgressDialog;
 import android.graphics.Point;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -50,6 +51,7 @@ public class Profiles extends Fragment{
     List<String> connections  = new ArrayList<>();
     private List<Card> cards = new ArrayList<>();
     private DatabaseReference  users_db  =    FirebaseDatabase.getInstance().getReference().child("users");
+    ProgressDialog progressDialog;
 
 
    // private ImageButton rejectBtn,acceptBtn;
@@ -69,6 +71,7 @@ public class Profiles extends Fragment{
 
         DisplayMetrics displayMetrics = new DisplayMetrics();
         getActivity().getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        progressDialog =  new ProgressDialog(getActivity());
 
 
 
@@ -89,6 +92,12 @@ public class Profiles extends Fragment{
                         .setSwipeInMsgLayoutId(R.layout.swipe_in_message)
                         .setSwipeOutMsgLayoutId(R.layout.swipe_out_message));
 
+        progressDialog.setIndeterminate(true);
+        progressDialog.setCancelable(false);
+
+
+
+
         //mSwipeView.onViewAdded();
 
 
@@ -105,9 +114,11 @@ public class Profiles extends Fragment{
         super.onStart();
         CardInfos();
 
+
     }
 
     private void CardInfos() {
+        progressDialog.show();
         users_db.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
@@ -129,8 +140,8 @@ public class Profiles extends Fragment{
                         data.put("uuid", dataSnapshot.getKey());
                         data.put("display_name", dataSnapshot.hasChild("display_name") ? dataSnapshot.child("display_name").getValue().toString() : "");
                         data.put("drinking", dataSnapshot.hasChild("drinking") ? dataSnapshot.child("drinking").getValue().toString() : "");
-                        data.put("age", dataSnapshot.hasChild("display_name") ? dataSnapshot.child("display_name").getValue().toString() : "");
-                        data.put("body_part", dataSnapshot.hasChild("display_name") ? dataSnapshot.child("display_name").getValue().toString() : "");
+                        data.put("age", dataSnapshot.hasChild("age") ? dataSnapshot.child("age").getValue().toString() : "");
+                        data.put("body_part", dataSnapshot.hasChild("body_part") ? dataSnapshot.child("body_part").getValue().toString() : "");
                         data.put("build", dataSnapshot.hasChild("build") ? dataSnapshot.child("build").getValue().toString() : "");
                         data.put("country", dataSnapshot.hasChild("country") ? dataSnapshot.child("country").getValue().toString() : "");
                         data.put("about_me", dataSnapshot.hasChild("about_me") ? dataSnapshot.child("about_me").getValue().toString() : "");
@@ -158,6 +169,8 @@ public class Profiles extends Fragment{
                     }
 
                 }
+                progressDialog.dismiss();
+
 
             }
 
