@@ -18,6 +18,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.widget.ImageView;
@@ -168,7 +169,9 @@ public class TinderCard implements android.view.View.OnClickListener {
             }
 
         });
-        gender.setImageDrawable( mContext.getResources().getDrawable(GenderConverter.convert(mCard)));
+
+        if(!TextUtils.isEmpty(mCard.getGender()))
+            gender.setImageDrawable( mContext.getResources().getDrawable(GenderConverter.convert(mCard)));
 
 
         RefreshList();
