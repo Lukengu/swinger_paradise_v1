@@ -85,6 +85,35 @@ public class MatchListAdapter extends RecyclerView.Adapter<MatchListAdapter.Matc
             }
 
         });
+        final DatabaseReference myConnectionsRef = FirebaseDatabase.getInstance().getReference("users/"+cards.get(position).getUuid()+"/online");
+        myConnectionsRef.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                holder.online_state.setEnabled(dataSnapshot.exists());
+
+
+            }
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
 
         holder.display_name.setText(cards.get(position).getDisplay_name());
 
@@ -248,12 +277,15 @@ public class MatchListAdapter extends RecyclerView.Adapter<MatchListAdapter.Matc
 
         public ImageView img;
         public TextView display_name;
+        public TextView online_state;
+
 
 
         public MatchViewHolder(View itemView) {
             super(itemView);
             img =  itemView.findViewById(R.id.profile_image);
             display_name  =  itemView.findViewById(R.id.display_name);
+            online_state =  itemView.findViewById(R.id.online_state);
             itemView.setOnClickListener(this);
         }
 

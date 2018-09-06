@@ -17,13 +17,15 @@ import swingersparadise.app.solutions.novatech.pro.swingersparadise.main.fragmen
 public class Matches extends Fragment {
 
     ViewPager viewPager;
+    TabLayout tabLayout;
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.matches,
                 container, false);
 
-        viewPager =  view.findViewById(R.id.view_pager);
+        viewPager =  view.findViewById(R.id.viewPager);
+        tabLayout =  view.findViewById(R.id.tabLayout);
 
 
 
@@ -33,6 +35,7 @@ public class Matches extends Fragment {
         matchesAdapter.addFragment(new ProfileMatch(), "Profile Matches");
         matchesAdapter.addFragment(new Favorites(), "Favorites");
         viewPager.setAdapter(matchesAdapter);
+        tabLayout.setupWithViewPager(viewPager);
 
 
         return view;

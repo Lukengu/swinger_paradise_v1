@@ -13,7 +13,7 @@
         <item name="android:autoCompleteTextViewStyle">@style/SwingersTextViewStyle</item>
 
         <item name="android:checkedTextViewStyle">@style/SwingersTextViewStyle</item>
-        <item name="android:progressBarStyle">@style/SwingersDialog</item>
+
 
     </style>
 

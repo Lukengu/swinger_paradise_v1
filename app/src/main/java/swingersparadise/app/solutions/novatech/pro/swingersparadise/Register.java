@@ -323,7 +323,7 @@ public class Register extends AppCompatActivity {
                                         editor.remove("password").commit();
                                         editor.remove("conf_password").commit();
 
-                                        startActivity(new Intent(Register.this, ContentOLD.class));
+                                        startActivity(new Intent(Register.this, Content.class));
                                         finish();
                                     }
                                 })

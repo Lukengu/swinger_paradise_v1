@@ -92,6 +92,7 @@ public class Profiles extends Fragment{
                         .setSwipeInMsgLayoutId(R.layout.swipe_in_message)
                         .setSwipeOutMsgLayoutId(R.layout.swipe_out_message));
 
+        progressDialog.setMessage("Loading...");
         progressDialog.setIndeterminate(true);
         progressDialog.setCancelable(false);
 
