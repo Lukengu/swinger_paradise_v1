@@ -1,23 +1,58 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-
-<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    app:cardBackgroundColor="@color/colorWhite"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    app:cardUseCompatPadding="true"
-    app:cardCornerRadius="10dp"
-    >
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="3dp">
 
-    <swingersparadise.app.solutions.novatech.pro.swingersparadise.main.view.SquareImageView
-        android:layout_width="wrap_content"
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        />
+        card_view:cardBackgroundColor="@android:color/white"
+        card_view:cardCornerRadius="4dp"
+        card_view:cardUseCompatPadding="false">
 
 
 
+        <swingersparadise.app.solutions.novatech.pro.swingersparadise.main.view.SquareImageView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/profile_image"
+            android:scaleType="fitCenter"
+            />
 
 
-</android.support.v7.widget.CardView>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:alpha="0.8"
+            android:background="@color/colorWhite"
+            android:padding="4dp">
+
+
+            <TextView
+                android:id="@+id/online_state"
+                android:layout_width="12dp"
+                android:layout_height="12dp"
+                android:layout_alignParentRight="true"
+                android:src="@drawable/indicators"
+                android:enabled="false"
+                android:text=" "/>
+
+
+            <TextView
+                android:id="@+id/display_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:textColor="@color/colorChocolateSombre"
+                android:textStyle="bold"
+                android:textSize="12sp"/>
+
+        </RelativeLayout>
+
+    </android.support.v7.widget.CardView>
+
+</LinearLayout>

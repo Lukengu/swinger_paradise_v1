@@ -129,6 +129,15 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="Content" />
         </activity>
+        <activity
+            android:name=".MatchView"
+            android:label="@string/title_activity_match_view"
+            android:parentActivityName=".Content"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="swingersparadise.app.solutions.novatech.pro.swingersparadise.Content" />
+        </activity>
     </application>
 
 </manifest>

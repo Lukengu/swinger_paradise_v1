@@ -23,7 +23,7 @@
                                 <PersistentState>
                                   <option name="values">
                                     <map>
-                                      <entry key="url" value="jar:file:/Applications/Android%20Studio%202.app/Contents/plugins/android/lib/android.jar!/images/material_design_icons/image/ic_edit_black_24dp.xml" />
+                                      <entry key="url" value="jar:file:/C:/Program%20Files/Android/Android%20Studio/plugins/android/lib/android.jar!/images/material_design_icons/communication/ic_email_black_24dp.xml" />
                                     </map>
                                   </option>
                                 </PersistentState>
@@ -34,8 +34,8 @@
                         <option name="values">
                           <map>
                             <entry key="color" value="d4d4d4" />
-                            <entry key="outputName" value="ic_edit_black_24dp" />
-                            <entry key="sourceFile" value="$PROJECT_DIR$/C:\Users\p.lukengu\swinger_paradise_v1\C:\Users\p.lukengu\Downloads\New Folder With Items\male_coupe.psd" />
+                            <entry key="outputName" value="ic_email_black_24dp" />
+                            <entry key="sourceFile" value="C:\Users\p.lukengu\swinger_paradise_v1\C:\Users\p.lukengu\swinger_paradise_v1\C:\Users\p.lukengu\Downloads\New Folder With Items\male_coupe.psd" />
                           </map>
                         </option>
                       </PersistentState>

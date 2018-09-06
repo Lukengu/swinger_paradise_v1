@@ -1,6 +1,7 @@
 package swingersparadise.app.solutions.novatech.pro.swingersparadise.main.fragments;
 
 import android.os.Bundle;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
@@ -32,6 +33,7 @@ public class Matches extends Fragment {
         matchesAdapter.addFragment(new ProfileMatch(), "Profile Matches");
         matchesAdapter.addFragment(new Favorites(), "Favorites");
         viewPager.setAdapter(matchesAdapter);
+
 
         return view;
     }
