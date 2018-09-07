@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -65,7 +66,7 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.FriendVi
 
     @Override
     public FriendViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v= LayoutInflater.from(parent.getContext()).inflate(R.layout.match_card,parent,false);
+        View v= LayoutInflater.from(parent.getContext()).inflate(R.layout.friend_card,parent,false);
         FriendsAdapter.FriendViewHolder holder=new FriendViewHolder(v);
 
         return holder;
@@ -85,6 +86,10 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.FriendVi
 
         });
 
+
+
+        holder.online_status.setVisibility(view == REQUEST ? View.GONE : View.VISIBLE);
+
         final DatabaseReference myConnectionsRef = FirebaseDatabase.getInstance().getReference("users/"+cards.get(position).getUuid()+"/online_presence");
         myConnectionsRef.addValueEventListener(new ValueEventListener() {
             @Override
@@ -99,16 +104,43 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.FriendVi
         });
 
         holder.display_name.setText(cards.get(position).getDisplay_name());
+        if(cards.get(position).getAge() != 0 ) {
+            holder.age.setText(","+cards.get(position).getAge());
+        }
 
         if(view == REQUEST){
             //  refreshMatches();
             holder.btn_one.setText("ACCEPT");
-            Drawable img = c.getResources().getDrawable( R.drawable.ic_check_circle_green_24dp );
-            holder.btn_one.setCompoundDrawables(img, null, null, null);
 
-            img = c.getResources().getDrawable( R.drawable.ic_cancel_red_24dp );
+
+
+            Drawable drawableRed = ContextCompat.getDrawable(c, R.drawable.ic_check_circle_green_24dp
+            );
+
+            // Set the bound of the drawable object
+            drawableRed.setBounds(
+                    0, // left
+                    0, // top
+                    drawableRed.getIntrinsicWidth(), // right
+                    drawableRed.getIntrinsicHeight() // bottom
+            );
+
+            holder.btn_one.setCompoundDrawables(drawableRed, null, null, null);
+
+            drawableRed = ContextCompat.getDrawable(
+                    c,
+                    R.drawable.ic_cancel_red_24dp
+            );
+
+            // Set the bound of the drawable object
+            drawableRed.setBounds(
+                    0, // left
+                    0, // top
+                    drawableRed.getIntrinsicWidth(), // right
+                    drawableRed.getIntrinsicHeight() // bottom
+            );
             holder.btn_two.setText("REJECT");
-            holder.btn_one.setCompoundDrawables(img, null, null, null);
+            holder.btn_two.setCompoundDrawables(drawableRed, null, null, null);
 
         }
         if(view == LIST){

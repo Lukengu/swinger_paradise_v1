@@ -285,6 +285,7 @@ public class Content extends AppCompatActivity
             try {
                 id = item.getItemId();
                 editor.remove("selected_menu").commit();
+                navigationView.setCheckedItem(item);
             } catch(NullPointerException e){
                 onNavigationItemSelected( navigationView.getMenu().findItem(R.id.nav_profile));
             }

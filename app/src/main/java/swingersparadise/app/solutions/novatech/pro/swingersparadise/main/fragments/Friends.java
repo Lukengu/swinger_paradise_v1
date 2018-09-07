@@ -12,13 +12,15 @@ import android.view.ViewGroup;
 
 import swingersparadise.app.solutions.novatech.pro.swingersparadise.R;
 import swingersparadise.app.solutions.novatech.pro.swingersparadise.main.adapters.MatchesAdapter;
+import swingersparadise.app.solutions.novatech.pro.swingersparadise.main.fragments.friends.List;
+import swingersparadise.app.solutions.novatech.pro.swingersparadise.main.fragments.friends.Requests;
 import swingersparadise.app.solutions.novatech.pro.swingersparadise.main.fragments.matches.Favorites;
 import swingersparadise.app.solutions.novatech.pro.swingersparadise.main.fragments.matches.ProfileMatch;
 
 public class Friends extends Fragment implements  ViewPager.OnPageChangeListener  {
     ViewPager viewPager;
     TabLayout tabLayout;
-    public static final String PREFERENCE= "matches";
+    public static final String PREFERENCE= "friends";
     private SharedPreferences spref;
     private SharedPreferences.Editor editor;
 
@@ -35,8 +37,8 @@ public class Friends extends Fragment implements  ViewPager.OnPageChangeListener
 
         MatchesAdapter matchesAdapter =  new MatchesAdapter(getFragmentManager(), getActivity());
 
-        matchesAdapter.addFragment(new ProfileMatch(), "Profile Matches");
-        matchesAdapter.addFragment(new Favorites(), "Favorites");
+        matchesAdapter.addFragment(new Requests(), "Requests");
+        matchesAdapter.addFragment(new List(), "List");
         viewPager.setAdapter(matchesAdapter);
         viewPager.addOnPageChangeListener(this);
         tabLayout.setupWithViewPager(viewPager);
@@ -60,6 +62,10 @@ public class Friends extends Fragment implements  ViewPager.OnPageChangeListener
 
     @Override
     public void onPageSelected(int i) {
+        if(spref.contains("position"))
+            editor.remove("position").commit();
+
+        editor.putInt("position", i).commit();
 
     }
 
