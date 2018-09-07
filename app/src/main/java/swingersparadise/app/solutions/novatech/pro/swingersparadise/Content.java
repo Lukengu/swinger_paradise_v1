@@ -40,6 +40,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import swingersparadise.app.solutions.novatech.pro.swingersparadise.main.entities.Card;
+import swingersparadise.app.solutions.novatech.pro.swingersparadise.main.fragments.Friends;
 import swingersparadise.app.solutions.novatech.pro.swingersparadise.main.fragments.Profiles;
 import swingersparadise.app.solutions.novatech.pro.swingersparadise.main.fragments.Matches;
 import swingersparadise.app.solutions.novatech.pro.swingersparadise.main.fragments.MyProfile;
@@ -57,6 +58,7 @@ public class Content extends AppCompatActivity
     private DatabaseReference users_db;
     private JSONObject myprofile;
     private BottomNavigationView bottom_navigation;
+    private NavigationView navigationView;
 
 
 
@@ -93,7 +95,7 @@ public class Content extends AppCompatActivity
       //  bottom_navigation = findViewById(R.id.bottom_navigation);
 
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
         View headerView = navigationView.getHeaderView(0);
@@ -279,10 +281,13 @@ public class Content extends AppCompatActivity
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
-
-            int id = item.getItemId();
-            editor.remove("selected_menu").commit();
-//            bottom_navigation.setVisibility(View.VISIBLE);
+            int id = 0;
+            try {
+                id = item.getItemId();
+                editor.remove("selected_menu").commit();
+            } catch(NullPointerException e){
+                onNavigationItemSelected( navigationView.getMenu().findItem(R.id.nav_profile));
+            }
 
             switch (id) {
                 case R.id.nav_profile:
@@ -299,6 +304,10 @@ public class Content extends AppCompatActivity
                 case R.id.nav_matches:
                     editor.putInt("selected_menu", R.id.nav_matches).commit();
                     loadFragment("matches", null);
+                    break;
+                case R.id.nav_friends:
+                    editor.putInt("selected_menu", R.id.nav_friends).commit();
+                    loadFragment("friends", null);
                     break;
                 case R.id.nav_logout:
                     mAuth.signOut();
@@ -341,6 +350,14 @@ public class Content extends AppCompatActivity
             // insert detail fragment into detail container
             f = new Matches();
             setTitle("Matches");
+
+        }
+
+        if( "friends".equals(name)){
+
+            // insert detail fragment into detail container
+            f = new Friends();
+            setTitle("Friends");
 
         }
 

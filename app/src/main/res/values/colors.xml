@@ -19,6 +19,9 @@
     <color name="google_dark">#cb4023</color>
     <color name="google_light">#d95033</color>
     <color name="facebook_light">#3b5999</color>
+    <color name="user_online">#67FF09</color>
+
+
 
 </resources>
 

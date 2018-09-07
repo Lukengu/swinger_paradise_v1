@@ -5,7 +5,6 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,8 +15,7 @@ import swingersparadise.app.solutions.novatech.pro.swingersparadise.main.adapter
 import swingersparadise.app.solutions.novatech.pro.swingersparadise.main.fragments.matches.Favorites;
 import swingersparadise.app.solutions.novatech.pro.swingersparadise.main.fragments.matches.ProfileMatch;
 
-public class Matches extends Fragment implements  ViewPager.OnPageChangeListener {
-
+public class Friends extends Fragment implements  ViewPager.OnPageChangeListener  {
     ViewPager viewPager;
     TabLayout tabLayout;
     public static final String PREFERENCE= "matches";
@@ -45,7 +43,7 @@ public class Matches extends Fragment implements  ViewPager.OnPageChangeListener
         spref = getActivity().getSharedPreferences(PREFERENCE, Context.MODE_PRIVATE);
         editor = spref.edit();
 
-       // tabLayout.addOnTabSelectedListener(this);
+        // tabLayout.addOnTabSelectedListener(this);
 
         int position = spref.contains("position") ?  spref.getInt("position",1) : 0;
         viewPager.setCurrentItem(position);
@@ -55,28 +53,6 @@ public class Matches extends Fragment implements  ViewPager.OnPageChangeListener
 
         return view;
     }
-
-  /*  @Override
-    public void onTabSelected(TabLayout.Tab tab) {
-        int position = tab.getPosition();
-
-        if(spref.contains("position"))
-            editor.remove("position").commit();
-
-        editor.putInt("position", position);
-
-    }
-
-    @Override
-    public void onTabUnselected(TabLayout.Tab tab) {
-
-    }
-
-    @Override
-    public void onTabReselected(TabLayout.Tab tab) {
-
-    }
-*/
     @Override
     public void onPageScrolled(int i, float v, int i1) {
 
@@ -85,10 +61,6 @@ public class Matches extends Fragment implements  ViewPager.OnPageChangeListener
     @Override
     public void onPageSelected(int i) {
 
-        if(spref.contains("position"))
-            editor.remove("position").commit();
-
-        editor.putInt("position", i).commit();
     }
 
     @Override

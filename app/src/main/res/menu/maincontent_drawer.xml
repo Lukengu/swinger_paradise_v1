@@ -17,15 +17,16 @@
             android:id="@+id/nav_matches"
             android:icon="@drawable/ic_favorite_border_black_24dp"
             android:title="Matches" />
+        <item
+            android:id="@+id/nav_friends"
+            android:icon="@drawable/ic_people_black_24dp"
+            android:title="Friends" />
 
         <item
             android:id="@+id/nav_message"
             android:icon="@drawable/ic_message_black_24dp"
             android:title="Messages" />
-        <item
-            android:id="@+id/nav_slideshow"
-            android:icon="@drawable/ic_people_black_24dp"
-            android:title="Friends" />
+
         <item
             android:id="@+id/nav_gallery"
             android:icon="@drawable/ic_menu_gallery"

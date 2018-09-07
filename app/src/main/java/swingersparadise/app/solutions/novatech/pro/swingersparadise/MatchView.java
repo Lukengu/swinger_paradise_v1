@@ -1,6 +1,7 @@
 package swingersparadise.app.solutions.novatech.pro.swingersparadise;
 
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -23,6 +24,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.ToggleButton;
 
 import com.bumptech.glide.Glide;
@@ -33,6 +35,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.loopj.android.http.AsyncHttpClient;
@@ -73,6 +76,7 @@ public class MatchView extends AppCompatActivity implements View.OnClickListener
     private ImageView view_profile;
     private ImageView friend_request;
     private ToggleButton favorite_btn;
+    private TextView online_status, indicators;
 
 
 
@@ -85,6 +89,9 @@ public class MatchView extends AppCompatActivity implements View.OnClickListener
 
         mCard = (Card) getIntent().getExtras().getSerializable("card");
 
+        setTitle(mCard.getDisplay_name());
+
+
 
 
         gender = findViewById(R.id.gender);
@@ -95,6 +102,9 @@ public class MatchView extends AppCompatActivity implements View.OnClickListener
         friend_request = findViewById(R.id.friend_request);
         favorite_btn = findViewById(R.id.favorite_btn);
         view_profile = findViewById(R.id.view_profile);
+
+        online_status = findViewById(R.id.online_status);
+        indicators = findViewById(R.id.indicators);
 
 
 
@@ -132,9 +142,36 @@ public class MatchView extends AppCompatActivity implements View.OnClickListener
         view_profile.setOnClickListener(this);
         friend_request.setOnClickListener(this);
         favorite_btn.setOnClickListener(this);
+
         RefreshList();
         checkFavorite();
         checkFriendship();
+        UserIsOnline();
+    }
+
+    private void UserIsOnline() {
+        final DatabaseReference myConnectionsRef = FirebaseDatabase.getInstance().getReference("users/"+mCard.getUuid()+"/online_presence");
+        myConnectionsRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                boolean online = dataSnapshot.exists();
+
+                indicators.setEnabled(online);
+                if(online){
+                    online_status.setText("Online");
+                    online_status.setTextColor(getResources().getColor(R.color.user_online));
+
+                }  else {
+                    online_status.setText("Offline");
+                    online_status.setTextColor(getResources().getColor(R.color.colorChocolateSombre));
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
     }
 
     private void RefreshList() {
@@ -319,6 +356,10 @@ public class MatchView extends AppCompatActivity implements View.OnClickListener
                     }
                     snackbar.show();
                 } else {
+                    final ProgressDialog dialog = new ProgressDialog(MatchView.this);
+                    dialog.setCancelable(false);
+                    dialog.setIndeterminate(true);
+                    dialog.setMessage("Please Wait...");
 
                     //send notification
                     String notification_message = "{\"interests\":[\""+mCard.getUuid()+"\"],\"fcm\":{\"notification\":{\"title\":\"Friend Request\",\"body\":\"You have receive a friend request From"+mCard.getDisplay_name()+"\"}}}";
@@ -343,6 +384,7 @@ public class MatchView extends AppCompatActivity implements View.OnClickListener
                                     friend_request.setImageDrawable(MatchView.this.getResources().getDrawable(R.drawable.ic_person_pin_red_24dp));
                                     friend_request.setImageDrawable(MatchView.this.getResources().getDrawable(R.drawable.ic_person_pin_red_24dp));
                                 }
+                                dialog.dismiss();
 
                             }
                             @Override

@@ -2,6 +2,7 @@ package swingersparadise.app.solutions.novatech.pro.swingersparadise.main.view;
 
 
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -129,6 +130,7 @@ public class TinderCard implements android.view.View.OnClickListener {
     private SharedPreferences spref;
     private SharedPreferences.Editor editor;
     private Fragment parent;
+    private String key ="";
 
     public static final String PREFERENCE= "tinder_card";
 
@@ -418,7 +420,7 @@ public class TinderCard implements android.view.View.OnClickListener {
 
     @Override
     public void onClick(android.view.View view) {
-        String key ="";
+
         switch(view.getId()){
             case  R.id.connect_no:
                 mSwipeView.doSwipe(false);
@@ -440,6 +442,10 @@ public class TinderCard implements android.view.View.OnClickListener {
                     }
                     snackbar.show();
                 } else {
+                    final ProgressDialog dialog = new ProgressDialog(mContext);
+                    dialog.setCancelable(false);
+                    dialog.setIndeterminate(true);
+                    dialog.setMessage("Please Wait...");
 
                     String notification_message = "{\"interests\":[\""+mCard.getUuid()+"\"],\"fcm\":{\"notification\":{\"title\":\"Unlock Request\",\"body\":\"You have receive a request From "+mCard.getDisplay_name()+" to unlock your private album\"}}}";
                     AsyncHttpClient client = new AsyncHttpClient();
@@ -452,21 +458,38 @@ public class TinderCard implements android.view.View.OnClickListener {
                             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                                 Log.i("Request", AppConfig.pusher_notification_enpoint);
                                 Log.i("Response", response.toString());
+                                dialog.dismiss();
+                                albums_db.child(mCard.getUuid()).child("unlock").child(firebaseAuth.getCurrentUser().getUid()).setValue("false");
+                                editor.putBoolean(key, true).commit();
+                                Snackbar.make(container, "Your request to unlock  sent to "+mCard.getDisplay_name()+"", Snackbar.LENGTH_LONG).show();
 
                             }
                             @Override
                             public void onFailure(int statusCode, Header[] headers, String res, Throwable t) {
                                 Log.e("Response", t.getMessage());
                                 // mCallBack.onFailure(new ClientException(t));
+                                AlertDialog alertDialog =  new AlertDialog.Builder(mContext).create();
+                                alertDialog.setTitle("");
+                                alertDialog.setIcon(R.drawable.ic_error_outline_black_24dp);
+                                alertDialog.setMessage(t.getMessage());
+                                alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "OK",
+                                        new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                dialog.dismiss();
+                                            }
+                                        });
+
+
+                                alertDialog.show();
+
+                                dialog.dismiss();
 
                             }
                         });
                     } catch (UnsupportedEncodingException e) {
                         e.printStackTrace();
                     }
-                    albums_db.child(mCard.getUuid()).child("unlock").child(firebaseAuth.getCurrentUser().getUid()).setValue("false");
-                    editor.putBoolean(key, true).commit();
-                    Snackbar.make(container, "Your request to unlock  sent to "+mCard.getDisplay_name()+"", Snackbar.LENGTH_LONG).show();
+
 
                 }
 
@@ -520,6 +543,11 @@ public class TinderCard implements android.view.View.OnClickListener {
                     client.addHeader("content-type", "application/json");
                     client.addHeader("authorization", "Bearer "+ AppConfig.auth_key);
                     try {
+                        final ProgressDialog dialog = new ProgressDialog(mContext);
+                        dialog.setCancelable(false);
+                        dialog.setIndeterminate(true);
+                        dialog.setMessage("Please Wait...");
+
                         StringEntity entity = new StringEntity(notification_message);
                         client.post(mContext,AppConfig.pusher_notification_enpoint,null,entity,"application/json",new JsonHttpResponseHandler() {
                             @Override
@@ -537,11 +565,29 @@ public class TinderCard implements android.view.View.OnClickListener {
                                     friend_request.setImageDrawable(mContext.getResources().getDrawable(R.drawable.ic_person_pin_red_24dp));
                                 }
 
+                                dialog.dismiss();
+
                             }
                             @Override
                             public void onFailure(int statusCode, Header[] headers, String res, Throwable t) {
                                 Log.e("Response", t.getMessage());
                                // mCallBack.onFailure(new ClientException(t));
+
+                                AlertDialog alertDialog =  new AlertDialog.Builder(mContext).create();
+                                alertDialog.setTitle("");
+                                alertDialog.setIcon(R.drawable.ic_error_outline_black_24dp);
+                                alertDialog.setMessage(t.getMessage());
+                                alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "OK",
+                                        new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                dialog.dismiss();
+                                            }
+                                        });
+
+
+                                alertDialog.show();
+
+                                dialog.dismiss();
 
                             }
                         });

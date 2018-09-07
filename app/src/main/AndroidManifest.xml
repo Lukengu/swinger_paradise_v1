@@ -133,6 +133,7 @@
             android:name=".MatchView"
             android:label="@string/title_activity_match_view"
             android:parentActivityName=".Content"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

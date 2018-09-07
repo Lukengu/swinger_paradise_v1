@@ -2,6 +2,7 @@ package swingersparadise.app.solutions.novatech.pro.swingersparadise.main.adapte
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -12,6 +13,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -33,24 +35,23 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Random;
 
 import swingersparadise.app.solutions.novatech.pro.swingersparadise.MatchView;
 import swingersparadise.app.solutions.novatech.pro.swingersparadise.R;
 import swingersparadise.app.solutions.novatech.pro.swingersparadise.main.entities.Card;
 
 
-public class MatchListAdapter extends RecyclerView.Adapter<MatchListAdapter.MatchViewHolder> {
+public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.FriendViewHolder> {
 
     Context c;
     ArrayList<Card> cards;
     SwipeRefreshLayout swiper;
-    public static final  int MATCHES  = 0;
-    public static final int FAVORITES = 1;
+    public static final  int REQUEST  = 0;
+    public static final int LIST = 1;
 
     int view ;
 
-    public MatchListAdapter(Context c, ArrayList<Card> cards, SwipeRefreshLayout swiper, int view ) {
+    public FriendsAdapter(Context c, ArrayList<Card> cards, SwipeRefreshLayout swiper, int view ) {
         this.c = c;
         this.cards = cards;
         this.swiper = swiper;
@@ -63,15 +64,15 @@ public class MatchListAdapter extends RecyclerView.Adapter<MatchListAdapter.Matc
     }
 
     @Override
-    public MatchViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public FriendViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v= LayoutInflater.from(parent.getContext()).inflate(R.layout.match_card,parent,false);
-        MatchListAdapter.MatchViewHolder holder=new MatchViewHolder(v);
+        FriendsAdapter.FriendViewHolder holder=new FriendViewHolder(v);
 
         return holder;
     }
 
     @Override
-    public void onBindViewHolder(final MatchListAdapter.MatchViewHolder holder, int position) {
+    public void onBindViewHolder(final FriendsAdapter.FriendViewHolder holder, int position) {
 
         StorageReference ref = FirebaseStorage.getInstance().getReference().child("profiles/" + cards.get(position).getUuid());
         ref.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
@@ -79,7 +80,7 @@ public class MatchListAdapter extends RecyclerView.Adapter<MatchListAdapter.Matc
             public void onSuccess(final Uri uri) {
                 Glide.with(c)
                         .load(uri.toString())
-                        .into(holder.img);
+                        .into(holder.profile_image);
             }
 
         });
@@ -88,7 +89,7 @@ public class MatchListAdapter extends RecyclerView.Adapter<MatchListAdapter.Matc
         myConnectionsRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                holder.online_state.setEnabled(dataSnapshot.exists());
+                holder.online_status.setEnabled(dataSnapshot.exists());
             }
 
             @Override
@@ -98,6 +99,30 @@ public class MatchListAdapter extends RecyclerView.Adapter<MatchListAdapter.Matc
         });
 
         holder.display_name.setText(cards.get(position).getDisplay_name());
+
+        if(view == REQUEST){
+            //  refreshMatches();
+            holder.btn_one.setText("ACCEPT");
+            Drawable img = c.getResources().getDrawable( R.drawable.ic_check_circle_green_24dp );
+            holder.btn_one.setCompoundDrawables(img, null, null, null);
+
+            img = c.getResources().getDrawable( R.drawable.ic_cancel_red_24dp );
+            holder.btn_two.setText("REJECT");
+            holder.btn_one.setCompoundDrawables(img, null, null, null);
+
+        }
+        if(view == LIST){
+            // refreshFavorites();
+            holder.btn_one.setText("CHAT");
+            Drawable img = c.getResources().getDrawable( R.drawable.ic_messenger );
+            holder.btn_one.setCompoundDrawables(img, null, null, null);
+
+            img = c.getResources().getDrawable( R.drawable.ic_people_black_24dp );
+            holder.btn_two.setText("PROFILE");
+            holder.btn_one.setCompoundDrawables(img, null, null, null);
+        }
+
+
     }
 
     @Override
@@ -112,11 +137,11 @@ public class MatchListAdapter extends RecyclerView.Adapter<MatchListAdapter.Matc
             public void run() {
                 //cards.add(0,cards.get(new Random().nextInt(cards.size())));
 
-                if(view == MATCHES){
-                    refreshMatches();
+                if(view == REQUEST){
+                  //  refreshMatches();
                 }
-                if(view == FAVORITES){
-                    refreshFavorites();
+                if(view == LIST){
+                   // refreshFavorites();
                 }
 
             }
@@ -164,7 +189,7 @@ public class MatchListAdapter extends RecyclerView.Adapter<MatchListAdapter.Matc
                                 try {
                                     card = new Card(jsonObject);
                                     cards.add(card);
-                                    MatchListAdapter.this.notifyDataSetChanged();
+                                    FriendsAdapter.this.notifyDataSetChanged();
                                     swiper.setRefreshing(false);
                                 } catch (IllegalAccessException e) {
                                     e.printStackTrace();
@@ -264,7 +289,7 @@ public class MatchListAdapter extends RecyclerView.Adapter<MatchListAdapter.Matc
                                             try {
                                                 card = new Card(jsonObject);
                                                 cards.add(card);
-                                                MatchListAdapter.this.notifyDataSetChanged();
+                                                FriendsAdapter.this.notifyDataSetChanged();
                                                 swiper.setRefreshing(false);
                                                 //  getActivity().setTitle(card.getDisplay_name());
                                             } catch (IllegalAccessException e) {
@@ -345,29 +370,33 @@ public class MatchListAdapter extends RecyclerView.Adapter<MatchListAdapter.Matc
 
     }
 
-    class MatchViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+    class FriendViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
-        public ImageView img;
-        public TextView display_name;
-        public TextView online_state;
+        public ImageView profile_image;
+        public TextView display_name,online_status,age;
+        public Button  btn_one, btn_two;
 
 
 
-        public MatchViewHolder(View itemView) {
+
+        public FriendViewHolder(View itemView) {
             super(itemView);
-            img =  itemView.findViewById(R.id.profile_image);
-            display_name  =  itemView.findViewById(R.id.display_name);
-            online_state =  itemView.findViewById(R.id.online_state);
-            itemView.setOnClickListener(this);
+            profile_image =  itemView.findViewById(R.id.profile_image);
+            display_name  =  itemView.findViewById(R.id.name);
+            age  =  itemView.findViewById(R.id.age);
+            online_status =  itemView.findViewById(R.id.online_status);
+            btn_one =  itemView.findViewById(R.id.btn_one);
+            btn_two =  itemView.findViewById(R.id.btn_two);
+
+            btn_one.setOnClickListener(this);
+            btn_two.setOnClickListener(this);
         }
 
 
 
         @Override
         public void onClick(View v) {
-            Bundle b = new Bundle();
-            b.putSerializable("card",  cards.get(getAdapterPosition()));
-            c.startActivity(new Intent(c, MatchView.class).putExtras(b));
+
         }
     }
 }

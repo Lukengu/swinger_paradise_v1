@@ -50,7 +50,7 @@ public class ProfileMatch  extends Fragment {
 
         mRecycler = view.findViewById(R.id.mRecycler);
         swiper =  view.findViewById(R.id.swiper);
-        matchListAdapter = new MatchListAdapter(getActivity(),cardList,swiper);
+        matchListAdapter = new MatchListAdapter(getActivity(),cardList,swiper,MatchListAdapter.FAVORITES);
 
         mRecycler.setAdapter(matchListAdapter);
         GridLayoutManager mGridLayoutManager = new GridLayoutManager(getActivity(), 2);
