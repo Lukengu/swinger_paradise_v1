@@ -1,18 +1,20 @@
-package swingersparadise.app.solutions.novatech.pro.swingersparadise.main.fragments.friends;
+package swingersparadise.app.solutions.novatech.pro.swingersparadise.main.fragments.chat;
 
 import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ProgressBar;
 import android.widget.TextView;
+
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -21,47 +23,69 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.squareup.picasso.Picasso;
+
 
 import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+import de.hdodenhof.circleimageview.CircleImageView;
 import swingersparadise.app.solutions.novatech.pro.swingersparadise.R;
-import swingersparadise.app.solutions.novatech.pro.swingersparadise.main.adapters.FriendsAdapter;
+import swingersparadise.app.solutions.novatech.pro.swingersparadise.main.adapters.ContactsAdapter;
 import swingersparadise.app.solutions.novatech.pro.swingersparadise.main.entities.Card;
+import swingersparadise.app.solutions.novatech.pro.swingersparadise.main.fragments.Friends;
 
-public class List  extends Fragment {
+public class Contacts extends Fragment {
 
-    RecyclerView mRecycler;
-    FriendsAdapter friendsAdapter;
-    SwipeRefreshLayout swiper;
-    ArrayList<Card> cardList = new ArrayList<>();
-    TextView empty_view;
+    private RecyclerView mFriendsList;
 
+    private DatabaseReference mFriendDatabase;
+    private DatabaseReference mUsersDatabase;
+    private FirebaseAuth mAuth;
+    private ContactsAdapter contactsAdapter;
+    private ArrayList<Card> cards = new ArrayList<>();
+
+    private String mCurrent_user_id;
+
+    private View mMainView;
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.matches_list,
-                container, false);
+        // Inflate the layout for this fragment
+        mMainView = inflater.inflate(R.layout.generic_list, container, false);
+
+        mFriendsList = (RecyclerView)mMainView.findViewById(R.id.genericList);
+        mAuth=FirebaseAuth.getInstance();
+
+        //---CURRENT USER ID--
+        mCurrent_user_id=mAuth.getCurrentUser().getUid();
+        mFriendDatabase = FirebaseDatabase.getInstance().getReference().child(mCurrent_user_id).child("friends");
+        mFriendDatabase.keepSynced(true);
+
+        //---USERS DATA
+        mUsersDatabase=FirebaseDatabase.getInstance().getReference().child("users");
+        mUsersDatabase.keepSynced(true);
+
+        mFriendsList.setHasFixedSize(true);
+        mFriendsList.setLayoutManager(new LinearLayoutManager(getContext()));
+        contactsAdapter = new ContactsAdapter(getActivity(), cards);
+        mFriendsList.setAdapter(contactsAdapter);
 
 
-        mRecycler = view.findViewById(R.id.mRecycler);
-        swiper =  view.findViewById(R.id.swiper);
-        friendsAdapter = new FriendsAdapter(getActivity(),cardList,swiper,FriendsAdapter.LIST);
-
-        mRecycler.setAdapter(friendsAdapter);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
-        mRecycler.setLayoutManager(linearLayoutManager);
-        empty_view = view.findViewById(R.id.empty_view);
-
-
-        getLists();
-        return view;
+        return mMainView;
     }
 
-    private void getLists() {
+    @Override
+    public void onStart() {
+        super.onStart();
+        //---FETCHING DATABASE FROM mFriendDatabase USING Friends.class AND ADDING TO RECYCLERVIEW----
+        contactsAdapter.clear();
+
         final FirebaseUser user  = FirebaseAuth.getInstance().getCurrentUser();
         final DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("users");
         final java.util.List<String> friends = new ArrayList<>();
@@ -116,7 +140,7 @@ public class List  extends Fragment {
                                             try {
                                                 card = new Card(jsonObject);
                                                 if(!internal.contains(key)) {
-                                                    friendsAdapter.addCard(card);
+                                                    contactsAdapter.addCard(card);
                                                     internal.add(key);
                                                 }
                                                 //  getActivity().setTitle(card.getDisplay_name());
@@ -234,7 +258,7 @@ public class List  extends Fragment {
                                     try {
                                         card = new Card(jsonObject);
                                         if(!internal.contains(dataSnapshot.getKey())) {
-                                            friendsAdapter.addCard(card);
+                                            contactsAdapter.addCard(card);
                                             internal.add(dataSnapshot.getKey());
                                         }
                                         //  getActivity().setTitle(card.getDisplay_name());
@@ -295,5 +319,10 @@ public class List  extends Fragment {
 
 
     }
-}
 
+
+
+
+
+
+}

@@ -23,6 +23,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
@@ -40,6 +42,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import swingersparadise.app.solutions.novatech.pro.swingersparadise.main.entities.Card;
+import swingersparadise.app.solutions.novatech.pro.swingersparadise.main.fragments.Chat;
 import swingersparadise.app.solutions.novatech.pro.swingersparadise.main.fragments.Friends;
 import swingersparadise.app.solutions.novatech.pro.swingersparadise.main.fragments.Profiles;
 import swingersparadise.app.solutions.novatech.pro.swingersparadise.main.fragments.Matches;
@@ -70,6 +73,7 @@ public class Content extends AppCompatActivity
         setContentView(R.layout.maincontent);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         editor = sharedPreferences.edit();
 
@@ -126,40 +130,36 @@ public class Content extends AppCompatActivity
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
         final DatabaseReference myConnectionsRef = database.getReference("users/"+currentUser.getUid()+"/online_presence");
 
-// stores the timestamp of my last disconnect (the last time I was seen online)
-        final DatabaseReference lastOnlineRef = database.getReference("/users/"+currentUser.getUid()+"/lastOnline");
 
-        final DatabaseReference connectedRef = database.getReference(".info/connected");
+//
+        mAuth=FirebaseAuth.getInstance();
+
+        final DatabaseReference lastOnlineRef =  FirebaseDatabase.getInstance().getReference("/users/"+mAuth.getUid()+"/lastOnline");
+
+        final DatabaseReference connectedRef =  FirebaseDatabase.getInstance().getReference(".info/connected");
+
         connectedRef.addValueEventListener(new ValueEventListener() {
             @Override
-            public void onDataChange(DataSnapshot snapshot) {
-                boolean connected = snapshot.getValue(Boolean.class);
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                boolean connected = dataSnapshot.getValue(Boolean.class);
                 if (connected) {
                     DatabaseReference con = myConnectionsRef.push();
-
-                    // when this device disconnects, remove it
                     con.onDisconnect().removeValue();
-
-
-                    // when I disconnect, update the last time I was seen online
                     lastOnlineRef.onDisconnect().setValue(ServerValue.TIMESTAMP);
-                    //myConnectionsRef.onDisconnect().removeValue();
-
-                    // add this device to my connections list
-                    // this value could contain info about the device or a timestamp too
                     con.setValue(Boolean.TRUE);
+
                 } else {
+
                     myConnectionsRef.onDisconnect().removeValue();
+
                 }
             }
 
             @Override
-            public void onCancelled(DatabaseError error) {
-                System.err.println("Listener was cancelled at .info/connected");
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
             }
         });
-
-
 
 
         setProfile();
@@ -211,6 +211,7 @@ public class Content extends AppCompatActivity
 
                         myprofile = new JSONObject(data);
                         display_name.setText("Welcome "+ myprofile.optString("display_name"));
+                        editor.putString("myprofile", myprofile.toString()).commit();
 
                         PushNotifications.start(Content.this, getString(R.string.pusher_instance_id));
                         PushNotifications.subscribe(currentUser.getUid());
@@ -309,14 +310,28 @@ public class Content extends AppCompatActivity
                     editor.putInt("selected_menu", R.id.nav_friends).commit();
                     loadFragment("friends", null);
                     break;
+                case R.id.nav_messenger:
+                    editor.putInt("selected_menu", R.id.nav_messenger).commit();
+                    loadFragment("chats", null);
+                    break;
                 case R.id.nav_logout:
                     mAuth.signOut();
                     final DatabaseReference myConnectionsRef = FirebaseDatabase.getInstance().getReference("users/"+currentUser.getUid()+"/online_presence");
                     final DatabaseReference lastOnlineRef = FirebaseDatabase.getInstance().getReference("/users/"+currentUser.getUid()+"/lastOnline");
-                    myConnectionsRef.removeValue();
-                    lastOnlineRef.setValue(ServerValue.TIMESTAMP);
 
-                    startActivity(new Intent(Content.this, Login.class));
+                    lastOnlineRef.setValue(ServerValue.TIMESTAMP).addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            if(task.isSuccessful()){
+
+                                myConnectionsRef.removeValue();
+                                mAuth.signOut();
+                                startActivity(new Intent(Content.this, Login.class));
+                            }
+
+                        }
+                    });
+
                     break;
             }
 
@@ -358,6 +373,13 @@ public class Content extends AppCompatActivity
             // insert detail fragment into detail container
             f = new Friends();
             setTitle("Friends");
+
+        }
+        if( "chats".equals(name)){
+
+            // insert detail fragment into detail container
+            f = new Chat();
+            setTitle("Chats");
 
         }
 

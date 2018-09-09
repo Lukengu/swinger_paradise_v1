@@ -114,4 +114,5 @@
     <string name="title_activity_mate_photos_viewer">MatePhotosViewer</string>
     <string name="title_activity_profile_view">ProfileView</string>
     <string name="title_activity_match_view">MatchView</string>
+    <string name="title_activity_single_chat">SingleChat</string>
 </resources>
