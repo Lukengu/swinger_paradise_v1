@@ -1,5 +1,6 @@
 package swingersparadise.app.solutions.novatech.pro.swingersparadise;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -11,7 +12,10 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v7.app.AlertDialog;
+import android.text.TextUtils;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -42,6 +46,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import swingersparadise.app.solutions.novatech.pro.swingersparadise.main.entities.Card;
+import swingersparadise.app.solutions.novatech.pro.swingersparadise.main.fragments.Albums;
 import swingersparadise.app.solutions.novatech.pro.swingersparadise.main.fragments.Chat;
 import swingersparadise.app.solutions.novatech.pro.swingersparadise.main.fragments.Friends;
 import swingersparadise.app.solutions.novatech.pro.swingersparadise.main.fragments.Profiles;
@@ -50,7 +55,7 @@ import swingersparadise.app.solutions.novatech.pro.swingersparadise.main.fragmen
 
 
 public class Content extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener, DialogInterface.OnKeyListener {
 
     private SharedPreferences sharedPreferences;
     private SharedPreferences.Editor editor;
@@ -62,9 +67,7 @@ public class Content extends AppCompatActivity
     private JSONObject myprofile;
     private BottomNavigationView bottom_navigation;
     private NavigationView navigationView;
-
-
-
+    private Card card;
 
 
     @Override
@@ -89,14 +92,13 @@ public class Content extends AppCompatActivity
         fab.hide();
 
 
-
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
-      //  bottom_navigation = findViewById(R.id.bottom_navigation);
+        //  bottom_navigation = findViewById(R.id.bottom_navigation);
 
 
         navigationView = (NavigationView) findViewById(R.id.nav_view);
@@ -104,21 +106,13 @@ public class Content extends AppCompatActivity
 
         View headerView = navigationView.getHeaderView(0);
         display_name = headerView.findViewById(R.id.display_name);
-       // profile_image = headerView.findViewById(R.id.profile_image);
-
-        MenuItem default_menu =  sharedPreferences.contains("selected_menu") ?
-                navigationView.getMenu().findItem(sharedPreferences.getInt("selected_menu", R.id.nav_discover))  :
-                  navigationView.getMenu().findItem(R.id.nav_discover) ;
-
-     //default_menu = navigationView.getMenu().findItem(R.id.nav_discover);
-        //loadFragment("discover", null);
-        onNavigationItemSelected(default_menu);
+        // profile_image = headerView.findViewById(R.id.profile_image);
 
         mAuth = FirebaseAuth.getInstance();
         authStateListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                if(firebaseAuth.getCurrentUser() == null){
+                if (firebaseAuth.getCurrentUser() == null) {
                     startActivity(new Intent(Content.this, Login.class));
                     finish();
                 }
@@ -128,15 +122,15 @@ public class Content extends AppCompatActivity
 
         currentUser = mAuth.getCurrentUser();
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
-        final DatabaseReference myConnectionsRef = database.getReference("users/"+currentUser.getUid()+"/online_presence");
+        final DatabaseReference myConnectionsRef = database.getReference("users/" + currentUser.getUid() + "/online_presence");
 
 
 //
-        mAuth=FirebaseAuth.getInstance();
+        mAuth = FirebaseAuth.getInstance();
 
-        final DatabaseReference lastOnlineRef =  FirebaseDatabase.getInstance().getReference("/users/"+mAuth.getUid()+"/lastOnline");
+        final DatabaseReference lastOnlineRef = FirebaseDatabase.getInstance().getReference("/users/" + mAuth.getUid() + "/lastOnline");
 
-        final DatabaseReference connectedRef =  FirebaseDatabase.getInstance().getReference(".info/connected");
+        final DatabaseReference connectedRef = FirebaseDatabase.getInstance().getReference(".info/connected");
 
         connectedRef.addValueEventListener(new ValueEventListener() {
             @Override
@@ -161,78 +155,57 @@ public class Content extends AppCompatActivity
             }
         });
 
+        MenuItem default_menu = sharedPreferences.contains("selected_menu") ?
+                navigationView.getMenu().findItem(sharedPreferences.getInt("selected_menu", R.id.nav_discover)) :
+                navigationView.getMenu().findItem(R.id.nav_discover);
 
-        setProfile();
+        //default_menu = navigationView.getMenu().findItem(R.id.nav_discover);
+        //loadFragment("discover", null);
+        onNavigationItemSelected(default_menu);
+
+
     }
 
     private void setProfile() {
 
 
-
-        if(currentUser != null) {
+        if (currentUser != null) {
 
             users_db = FirebaseDatabase.getInstance().getReference().child("users");
-          //  DatabaseReference user_profile = users_db.child(currentUser.getUid());
+            //  DatabaseReference user_profile = users_db.child(currentUser.getUid());
             Log.d("UUID", currentUser.getUid());
-          //  Toast.makeText(this,  currentUser.getUid(), Toast.LENGTH_LONG).show();
-            users_db.addChildEventListener(new ChildEventListener() {
+            //  Toast.makeText(this,  currentUser.getUid(), Toast.LENGTH_LONG).show();
+
+            users_db.addValueEventListener(new ValueEventListener() {
                 @Override
-                public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                    if (dataSnapshot.exists() && dataSnapshot.getKey().equals(currentUser.getUid())) {
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    for (DataSnapshot userSnapshot : dataSnapshot.getChildren()) {
+                        if (userSnapshot.getKey().equals(currentUser.getUid())) {
+                            card = userSnapshot.getValue(Card.class);
+                            display_name.setText(card.getDisplay_name());
+                            editor.putString("display_name", card.getDisplay_name()).commit();
+                            if ((TextUtils.isEmpty(card.getDisplay_name()) || TextUtils.isEmpty(card.getGender()) ||
+                                    TextUtils.isEmpty(card.getMarital_status()) ) && ! navigationView.getMenu().equals(navigationView.getMenu().findItem(R.id.nav_profile)) ) {
 
-                     //   Map<String, Object> data = (Map<String, Object>) dataSnapshot.getValue();
+                                AlertDialog aDialog = new AlertDialog.Builder(Content.this).setMessage("Your profile is not completed please complete before you continue").setTitle("Icomplete Profile")
+                                        .setNeutralButton("Close", new DialogInterface.OnClickListener() {
+                                            public void onClick(final DialogInterface dialog,
+                                                                final int which) {
+                                                //Prevent to finish activity, if user clicks about.
 
-
-                        Map<String, String> data = new HashMap<>();
-                        data.put("display_name", dataSnapshot.hasChild("display_name") ? dataSnapshot.child("display_name").getValue().toString() : "");
-                        data.put("drinking", dataSnapshot.hasChild("drinking") ? dataSnapshot.child("drinking").getValue().toString() : "");
-                        data.put("age", dataSnapshot.hasChild("age") ? dataSnapshot.child("age").getValue().toString() : "");
-                        data.put("body_part", dataSnapshot.hasChild("body_part") ? dataSnapshot.child("body_part").getValue().toString() : "");
-                        data.put("build", dataSnapshot.hasChild("build") ? dataSnapshot.child("build").getValue().toString() : "");
-                        data.put("country", dataSnapshot.hasChild("country") ? dataSnapshot.child("country").getValue().toString() : "");
-                        data.put("about_me", dataSnapshot.hasChild("about_me") ? dataSnapshot.child("about_me").getValue().toString() : "");
-                        data.put("gender", dataSnapshot.hasChild("gender") ? dataSnapshot.child("gender").getValue().toString() : "");
-                        data.put("hair_color", dataSnapshot.hasChild("hair_color") ? dataSnapshot.child("hair_color").getValue().toString() : "");
-                        data.put("marital_status", dataSnapshot.hasChild("marital_status") ? dataSnapshot.child("marital_status").getValue().toString() : "");
-                        data.put("name", dataSnapshot.hasChild("name") ? dataSnapshot.child("name").getValue().toString() : "");
-                        data.put("referred_by", dataSnapshot.hasChild("referred_by") ? dataSnapshot.child("referred_by").getValue().toString() : "");
-                        data.put("sexual_prefs", dataSnapshot.hasChild("sexual_prefs") ? dataSnapshot.child("sexual_prefs").getValue().toString() : "");
-                        data.put("ethnicity", dataSnapshot.hasChild("ethnicity") ? dataSnapshot.child("ethnicity").getValue().toString() : "");
-                        data.put("smoking", dataSnapshot.hasChild("smoking") ? dataSnapshot.child("smoking").getValue().toString() : "");
+                                                onNavigationItemSelected(navigationView.getMenu().findItem(R.id.nav_profile));
 
 
-                     /*   Iterator iterator = data.entrySet().iterator();
-                        System.out.println("---------------------------------------------------");
-                        while(iterator.hasNext()) {
-                            Map.Entry<String, Object> entry = (  Map.Entry) iterator.next();
-                            System.out.println(entry.getKey()+"---"+entry.getValue().toString());
+                                            }
+                                        }).create();
+                                aDialog.setIcon(R.drawable.ic_error_black_24dp);
+                                aDialog.setOnKeyListener(Content.this);
+                                aDialog.show();
 
-                        }*/
-
-                        myprofile = new JSONObject(data);
-                        display_name.setText("Welcome "+ myprofile.optString("display_name"));
-                        editor.putString("myprofile", myprofile.toString()).commit();
-
-                        PushNotifications.start(Content.this, getString(R.string.pusher_instance_id));
-                        PushNotifications.subscribe(currentUser.getUid());
-
-
+                            }
+                            break;
+                        }
                     }
-                }
-
-                @Override
-                public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-                }
-
-                @Override
-                public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
-
-                }
-
-                @Override
-                public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
                 }
 
                 @Override
@@ -240,9 +213,11 @@ public class Content extends AppCompatActivity
 
                 }
             });
-        } else {
-            startActivity(new Intent(Content.this, Login.class));
-            finish();
+
+
+            PushNotifications.start(Content.this, getString(R.string.pusher_instance_id));
+            PushNotifications.subscribe(currentUser.getUid());
+
         }
     }
 
@@ -278,89 +253,107 @@ public class Content extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
+    //External Acces hack
+    public void selectAlbum(){
+        onNavigationItemSelected(navigationView.getMenu().findItem(R.id.nav_album));
+    }
+
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
-            int id = 0;
-            try {
-                id = item.getItemId();
-                editor.remove("selected_menu").commit();
-            } catch(NullPointerException e){
-                onNavigationItemSelected( navigationView.getMenu().findItem(R.id.nav_profile));
-            }
+        int id = 0;
+        try {
+            id = item.getItemId();
+            editor.remove("selected_menu").commit();
+        } catch (NullPointerException e) {
+            onNavigationItemSelected(navigationView.getMenu().findItem(R.id.nav_profile));
+        }
+        if(id != R.id.nav_profile){
+            setProfile();
+        }
 
-            switch (id) {
-                case R.id.nav_profile:
-                    Bundle bundle = new Bundle();
-                    editor.putInt("selected_menu", R.id.nav_profile).commit();
-                    loadFragment("profile", null);
+        navigationView.setCheckedItem(item);
 
-                    break;
-                case R.id.nav_discover:
-                 //   bottom_navigation.setVisibility(View.INVISIBLE);
-                    editor.putInt("selected_menu", R.id.nav_discover).commit();
-                    loadFragment("discover", null);
-                    break;
-                case R.id.nav_matches:
-                    editor.putInt("selected_menu", R.id.nav_matches).commit();
-                    loadFragment("matches", null);
-                    break;
-                case R.id.nav_friends:
-                    editor.putInt("selected_menu", R.id.nav_friends).commit();
-                    loadFragment("friends", null);
-                    break;
-                case R.id.nav_messenger:
-                    editor.putInt("selected_menu", R.id.nav_messenger).commit();
-                    loadFragment("chats", null);
-                    break;
-                case R.id.nav_logout:
-                    mAuth.signOut();
-                    final DatabaseReference myConnectionsRef = FirebaseDatabase.getInstance().getReference("users/"+currentUser.getUid()+"/online_presence");
-                    final DatabaseReference lastOnlineRef = FirebaseDatabase.getInstance().getReference("/users/"+currentUser.getUid()+"/lastOnline");
 
-                    lastOnlineRef.setValue(ServerValue.TIMESTAMP).addOnCompleteListener(new OnCompleteListener<Void>() {
-                        @Override
-                        public void onComplete(@NonNull Task<Void> task) {
-                            if(task.isSuccessful()){
+        switch (id) {
+            case R.id.nav_profile:
+                Bundle bundle = new Bundle();
+                editor.putInt("selected_menu", R.id.nav_profile).commit();
+                loadFragment("profile", null);
 
-                                myConnectionsRef.removeValue();
-                                mAuth.signOut();
-                                startActivity(new Intent(Content.this, Login.class));
-                            }
+                break;
+            case R.id.nav_discover:
+                //   bottom_navigation.setVisibility(View.INVISIBLE);
+                editor.putInt("selected_menu", R.id.nav_discover).commit();
+                loadFragment("discover", null);
+                break;
+            case R.id.nav_matches:
+                editor.putInt("selected_menu", R.id.nav_matches).commit();
+                loadFragment("matches", null);
+                break;
+            case R.id.nav_friends:
+                editor.putInt("selected_menu", R.id.nav_friends).commit();
+                loadFragment("friends", null);
+                break;
+            case R.id.nav_messenger:
+                editor.putInt("selected_menu", R.id.nav_messenger).commit();
+                loadFragment("chats", null);
+                break;
+            case R.id.nav_album:
+                editor.putInt("selected_menu", R.id.nav_album).commit();
+                loadFragment("albums", null);
+                break;
 
+
+            case R.id.nav_logout:
+                mAuth.signOut();
+                final DatabaseReference myConnectionsRef = FirebaseDatabase.getInstance().getReference("users/" + currentUser.getUid() + "/online_presence");
+                final DatabaseReference lastOnlineRef = FirebaseDatabase.getInstance().getReference("/users/" + currentUser.getUid() + "/lastOnline");
+
+                lastOnlineRef.setValue(ServerValue.TIMESTAMP).addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+
+                            myConnectionsRef.removeValue();
+                            mAuth.signOut();
+                            startActivity(new Intent(Content.this, Login.class));
                         }
-                    });
 
-                    break;
-            }
+                    }
+                });
 
-            DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-            drawer.closeDrawer(GravityCompat.START);
-            return true;
+                break;
+        }
+
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer.closeDrawer(GravityCompat.START);
+        return true;
 
 
     }
+
     public void loadFragment(String name, @Nullable Bundle bundle) {
 
         Fragment f = null;
         //String tag = "";
 
-        if( "discover".equals(name)){
+        if ("discover".equals(name)) {
 
             // insert detail fragment into detail container
             f = new Profiles();
             setTitle("Discover");
 
         }
-        if( "profile".equals(name)){
+        if ("profile".equals(name)) {
 
             // insert detail fragment into detail container
             f = new MyProfile();
             setTitle("My Profile");
 
         }
-        if( "matches".equals(name)){
+        if ("matches".equals(name)) {
 
             // insert detail fragment into detail container
             f = new Matches();
@@ -368,23 +361,30 @@ public class Content extends AppCompatActivity
 
         }
 
-        if( "friends".equals(name)){
+        if ("friends".equals(name)) {
 
             // insert detail fragment into detail container
             f = new Friends();
             setTitle("Friends");
 
         }
-        if( "chats".equals(name)){
+        if ("chats".equals(name)) {
 
             // insert detail fragment into detail container
             f = new Chat();
             setTitle("Chats");
 
         }
+        if ("albums".equals(name)) {
+
+            // insert detail fragment into detail container
+            f = new Albums();
+            setTitle("Manage My photos");
+
+        }
 
 
-        if(bundle != null)
+        if (bundle != null)
             f.setArguments(bundle);
 
 
@@ -408,4 +408,12 @@ public class Content extends AppCompatActivity
         super.onStop();
         mAuth.removeAuthStateListener(authStateListener);
     }
+    @Override
+    public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
+        if(keyCode == KeyEvent.KEYCODE_BACK){
+            //disable the back button
+        }
+        return true;
+    }
+
 }

@@ -54,7 +54,7 @@ public class List  extends Fragment {
         mRecycler.setAdapter(friendsAdapter);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
         mRecycler.setLayoutManager(linearLayoutManager);
-        empty_view = view.findViewById(R.id.empty_view);
+
 
 
         getLists();

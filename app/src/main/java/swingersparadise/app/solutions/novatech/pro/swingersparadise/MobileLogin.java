@@ -212,6 +212,7 @@ public class MobileLogin extends Activity {
 
          //   Toast.makeText(MobileLogin.this,phoneNumber, Toast.LENGTH_LONG).show();
             progressDialog  = new ProgressDialog(this);
+            progressDialog.setMessage("Please Wait...");
             progressDialog.setIndeterminate(true);
             progressDialog.show();
 

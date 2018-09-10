@@ -107,7 +107,7 @@ public class Login extends Activity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         super.onCreate(savedInstanceState);
 
-        setTitle("Forgot Password?");
+        setTitle("Sign In");
 
 
         //Twitter
@@ -156,7 +156,7 @@ public class Login extends Activity {
         // [END initialize_twitter_login]
 
 
-        String text = "Don't have a account yet . Please <a href=\"app://register\">Register</a>";
+        String text = "Don't have a account yet . Please ";
         String reset = "<a href=\"app://reset_password\">Forgot</a> Password?";
 
 

@@ -27,10 +27,10 @@
             android:icon="@drawable/ic_messenger"
             android:title="Chats" />
 
-        <!--item
-            android:id="@+id/nav_message"
-            android:icon="@drawable/ic_message_black_24dp"
-            android:title="Messages" /-->
+        <item
+            android:id="@+id/nav_album"
+            android:icon="@drawable/ic_photo_album_black_24dp"
+            android:title="My Photos" />
 
         <item
             android:id="@+id/nav_gallery"
