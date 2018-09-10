@@ -52,6 +52,15 @@ public class Public extends Fragment {
         mRecycler.setHasFixedSize(true);
         setHasOptionsMenu(true);
 
+        swiper.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                photosAdapter.refresh();
+
+            }
+        });
+
+
         return view;
     }
 

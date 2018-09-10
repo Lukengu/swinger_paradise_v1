@@ -87,7 +87,7 @@ public class PhotosAdapter extends RecyclerView.Adapter<PhotosAdapter.PhotoViewH
         return photos.size();
     }
 
-    private void refresh()
+    public void refresh ()
     {
         new Handler().postDelayed(new Runnable() {
             @Override
