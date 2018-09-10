@@ -30,6 +30,8 @@ import swingersparadise.app.solutions.novatech.pro.swingersparadise.R;
 import swingersparadise.app.solutions.novatech.pro.swingersparadise.main.adapters.FriendsAdapter;
 import swingersparadise.app.solutions.novatech.pro.swingersparadise.main.adapters.MatchListAdapter;
 import swingersparadise.app.solutions.novatech.pro.swingersparadise.main.entities.Card;
+import swingersparadise.app.solutions.novatech.pro.swingersparadise.main.fragments.Friends;
+
 
 public class Requests   extends Fragment {
     RecyclerView mRecycler;
@@ -74,76 +76,76 @@ public class Requests   extends Fragment {
                     requests.addChildEventListener(new ChildEventListener() {
                         @Override
                         public void onChildAdded(@NonNull  DataSnapshot requestSnapshot, @Nullable String s) {
-                         if("false".equals(requestSnapshot.getValue().toString())){
-                             final String key = requestSnapshot.getKey();
 
-                             ref.addChildEventListener(new ChildEventListener() {
-                                 @Override
-                                 public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                                     if(dataSnapshot.getKey().equals(key)){
-                                         Map<String, String> data = new HashMap<>();
+                            if("false".equals(requestSnapshot.getValue().toString())){
+                                final String key = requestSnapshot.getKey();
 
-                                        // Toast.makeText(getActivity(), dataSnapshot.child("display_name").getValue().toString(), Toast.LENGTH_LONG).show();
+                                ref.addChildEventListener(new ChildEventListener() {
+                                    @Override
+                                    public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                                        if(dataSnapshot.getKey().equals(key)){
+                                            Map<String, String> data = new HashMap<>();
 
-
-                                         data.put("uuid",key);
-                                         data.put("display_name",   dataSnapshot.hasChild("display_name") ?   dataSnapshot.child("display_name").getValue().toString() : "");
-                                         data.put("drinking",   dataSnapshot.hasChild("drinking") ?   dataSnapshot.child("drinking").getValue().toString() : "");
-                                         data.put("age",   dataSnapshot.hasChild("age") ?   dataSnapshot.child("age").getValue().toString() : "");
-                                         data.put("body_part",   dataSnapshot.hasChild("body_part") ?   dataSnapshot.child("body_part").getValue().toString() : "");
-                                         data.put("build",   dataSnapshot.hasChild("build") ?   dataSnapshot.child("build").getValue().toString() : "");
-                                         data.put("country",   dataSnapshot.hasChild("country") ?   dataSnapshot.child("country").getValue().toString() : "");
-                                         data.put("about_me",   dataSnapshot.hasChild("about_me") ?   dataSnapshot.child("about_me").getValue().toString() : "");
-                                         data.put("gender",   dataSnapshot.hasChild("gender") ?   dataSnapshot.child("gender").getValue().toString() : "");
-                                         data.put("hair_color",   dataSnapshot.hasChild("hair_color") ?   dataSnapshot.child("hair_color").getValue().toString() : "");
-                                         data.put("marital_status",   dataSnapshot.hasChild("marital_status") ?   dataSnapshot.child("marital_status").getValue().toString() : "");
-                                         data.put("name",   dataSnapshot.hasChild("name") ?   dataSnapshot.child("name").getValue().toString() : "");
-                                         data.put("referred_by",   dataSnapshot.hasChild("referred_by") ?   dataSnapshot.child("referred_by").getValue().toString() : "");
-                                         data.put("sexual_prefs",   dataSnapshot.hasChild("sexual_prefs") ?   dataSnapshot.child("sexual_prefs").getValue().toString() : "");
-                                         data.put("ethnicity",   dataSnapshot.hasChild("ethnicity") ?   dataSnapshot.child("ethnicity").getValue().toString() : "");
-                                         data.put("smoking",   dataSnapshot.hasChild("smoking") ?   dataSnapshot.child("smoking").getValue().toString() : "");
+                                            // Toast.makeText(getActivity(), dataSnapshot.child("display_name").getValue().toString(), Toast.LENGTH_LONG).show();
 
 
-                                         JSONObject jsonObject = new JSONObject(data);
-                                         Card card = null;
-                                         try {
-                                             card = new Card(jsonObject);
-                                             friendsAdapter.addCard(card);
-                                             //  getActivity().setTitle(card.getDisplay_name());
-                                         } catch (IllegalAccessException e) {
-                                             e.printStackTrace();
-                                         }
-
-                                     }
-                                 }
-
-                                 @Override
-                                 public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-                                 }
-
-                                 @Override
-                                 public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
-
-                                 }
-
-                                 @Override
-                                 public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-                                 }
-
-                                 @Override
-                                 public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                                 }
-                             });
+                                            data.put("uuid",key);
+                                            data.put("display_name",   dataSnapshot.hasChild("display_name") ?   dataSnapshot.child("display_name").getValue().toString() : "");
+                                            data.put("drinking",   dataSnapshot.hasChild("drinking") ?   dataSnapshot.child("drinking").getValue().toString() : "");
+                                            data.put("age",   dataSnapshot.hasChild("age") ?   dataSnapshot.child("age").getValue().toString() : "");
+                                            data.put("body_part",   dataSnapshot.hasChild("body_part") ?   dataSnapshot.child("body_part").getValue().toString() : "");
+                                            data.put("build",   dataSnapshot.hasChild("build") ?   dataSnapshot.child("build").getValue().toString() : "");
+                                            data.put("country",   dataSnapshot.hasChild("country") ?   dataSnapshot.child("country").getValue().toString() : "");
+                                            data.put("about_me",   dataSnapshot.hasChild("about_me") ?   dataSnapshot.child("about_me").getValue().toString() : "");
+                                            data.put("gender",   dataSnapshot.hasChild("gender") ?   dataSnapshot.child("gender").getValue().toString() : "");
+                                            data.put("hair_color",   dataSnapshot.hasChild("hair_color") ?   dataSnapshot.child("hair_color").getValue().toString() : "");
+                                            data.put("marital_status",   dataSnapshot.hasChild("marital_status") ?   dataSnapshot.child("marital_status").getValue().toString() : "");
+                                            data.put("name",   dataSnapshot.hasChild("name") ?   dataSnapshot.child("name").getValue().toString() : "");
+                                            data.put("referred_by",   dataSnapshot.hasChild("referred_by") ?   dataSnapshot.child("referred_by").getValue().toString() : "");
+                                            data.put("sexual_prefs",   dataSnapshot.hasChild("sexual_prefs") ?   dataSnapshot.child("sexual_prefs").getValue().toString() : "");
+                                            data.put("ethnicity",   dataSnapshot.hasChild("ethnicity") ?   dataSnapshot.child("ethnicity").getValue().toString() : "");
+                                            data.put("smoking",   dataSnapshot.hasChild("smoking") ?   dataSnapshot.child("smoking").getValue().toString() : "");
 
 
+                                            JSONObject jsonObject = new JSONObject(data);
+                                            Card card = null;
+                                            try {
+                                                card = new Card(jsonObject);
+                                                friendsAdapter.addCard(card);
+                                                //  getActivity().setTitle(card.getDisplay_name());
+                                            } catch (IllegalAccessException e) {
+                                                e.printStackTrace();
+                                            }
 
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+                                    }
+
+                                    @Override
+                                    public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+
+                                    }
+
+                                    @Override
+                                    public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+                                    }
+
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                    }
+                                });
 
 
 
-                         }
+
+
+                            }
 
                         }
 
@@ -190,5 +192,9 @@ public class Requests   extends Fragment {
 
             }
         });
+
+
+        //((Friends) getParentFragment()).setCountRequestsBadge(friendsAdapter.getItemCount());
+
     }
 }

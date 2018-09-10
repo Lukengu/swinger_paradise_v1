@@ -1,8 +1,15 @@
 package swingersparadise.app.solutions.novatech.pro.swingersparadise.main.fragments;
 
+import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
@@ -11,7 +18,9 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -32,10 +41,15 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 import com.pusher.pushnotifications.PushNotifications;
 
 import org.json.JSONObject;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -54,17 +68,22 @@ public class MyProfile extends Fragment {
     private Spinner marital_status,gender,build,ethnicity,body_part,hair_colour,smoking,drinking;
     ImageView profile_image;
     FirebaseUser user;
-    Button save_profile;
+    Button save_profile,manage_photos;
     DatabaseReference users_db;
     CoordinatorLayout parent;
     Card card;
+    private static final int GET_FROM_GALLERY = 0;
+    private static final int REQUEST_IMAGE_CAPTURE = 1;
+    SharedPreferences spref;
+    SharedPreferences.Editor editor;
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.my_profile,
                 container, false);
 
-
+        spref = getActivity().getSharedPreferences("Profile", Context.MODE_PRIVATE);
+        editor = spref.edit();
 
 
         display_name = view.findViewById(R.id.display_name);
@@ -83,6 +102,7 @@ public class MyProfile extends Fragment {
         sexual_preferences = view.findViewById(R.id.sexual_preferences);
         profile_image = view.findViewById(R.id.profile_image);
         save_profile = view.findViewById(R.id.save_profile);
+        manage_photos = view.findViewById(R.id.manage_photos);
         users_db = FirebaseDatabase.getInstance().getReference().child("users");
         parent = view.findViewById(R.id.parent);
 
@@ -126,8 +146,14 @@ public class MyProfile extends Fragment {
         drinking.setAdapter(adapter);
 
 
+        registerForContextMenu(profile_image);
+        manage_photos.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
 
-
+                ((Content) getActivity()).selectAlbum();
+            }
+        });
 
 
         save_profile.setOnClickListener(new View.OnClickListener() {
@@ -264,6 +290,23 @@ public class MyProfile extends Fragment {
                 users_db.child(user.getUid()).child("drinking").setValue(drinking.getSelectedItem().toString());
                 users_db.child(user.getUid()).child("about_me").setValue(about_me.getText().toString());
                 users_db.child(user.getUid()).child("sexual_prefs").setValue(sexual_preferences.getSelectedItemsAsString());
+                if(spref.contains("selected_image")){
+
+
+                    FirebaseStorage firebaseStorage = FirebaseStorage.getInstance();
+                    StorageReference ref = firebaseStorage.getReference().child("profiles/"+ user.getUid());
+                    final String file_name  = spref.getString("selected_image", "");
+                    final Uri file_path = Uri.fromFile(new File(file_name));
+                    if(file_path != null) {
+                        ref.putFile(file_path)
+                                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                                    @Override
+                                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                                    }
+                                });
+                    }
+
+                }
 
 
                 Snackbar.make(parent, "Profile Saved", Snackbar.LENGTH_LONG).show();
@@ -277,14 +320,18 @@ public class MyProfile extends Fragment {
     }
 
     private void load() {
+
+
+
         users_db.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                 if (dataSnapshot.exists() && dataSnapshot.getKey().equals(user.getUid())) {
 
 
-
-                        display_name.setText(dataSnapshot.child("display_name").getValue().toString());
+                        try {
+                            display_name.setText(dataSnapshot.child("display_name").getValue().toString());
+                        }  catch(NullPointerException e){}
                         try {
                             age.setText(dataSnapshot.child("age").getValue().toString());
                         } catch(NullPointerException e){}
@@ -383,5 +430,94 @@ public class MyProfile extends Fragment {
 
             }
         });
+    }
+
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu,v,menuInfo);
+        menu.setHeaderTitle("Profile Photo");
+        menu.add(0, v.getId(), 0, "Take Photo");
+        menu.add(1, v.getId(), 0, "From Gallery");
+    }
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        if("From Gallery".equals(item.getTitle())){
+            startActivityForResult(
+                    new Intent(
+                            Intent.ACTION_PICK,
+                            MediaStore.Images.Media.INTERNAL_CONTENT_URI
+                    ),
+                    GET_FROM_GALLERY
+            );
+        }
+        if("Take Photo".equals(item.getTitle())){
+            Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            if (takePictureIntent.resolveActivity(getActivity().getPackageManager()) != null) {
+                startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+            }
+
+        }
+        return true;
+    }
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if(requestCode==GET_FROM_GALLERY && resultCode == Activity.RESULT_OK) {
+
+            Bitmap bitmap = null;
+            try {
+                // Uri profileImage = data.getData();
+
+                //  ((Register) getActivity()).setProfileImage(profileImage);
+
+
+                Bitmap selectedImage = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(),data.getData());
+                profile_image.setImageBitmap(Bitmap.createScaledBitmap(selectedImage, 200, 200, false));
+                if(spref.contains("selected_image"))
+                    editor.remove("selected_image").commit();
+
+                editor.putString("selected_image",   getActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES).getPath().concat("/profile_img.jpg"));
+                saveBitmapToPath(selectedImage);
+
+            } catch (FileNotFoundException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            } catch (IOException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+        }
+        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == Activity.RESULT_OK) {
+            Bundle extras = data.getExtras();
+            Bitmap selectedImage  = (Bitmap) extras.get("data");
+
+            profile_image.setImageBitmap(Bitmap.createScaledBitmap(selectedImage, 200, 200, false));
+            editor.putString("selected_image",   getActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES).getPath().concat("/profile_img.jpg"));
+            saveBitmapToPath(selectedImage);
+
+            // ((Register) getActivity()).setProfileImage( Uri.fromFile( new File(getActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES).getPath().concat("/profile_img.jpg"))));
+            //saveBitmapToPath(imageBitmap);
+        }
+
+
+
+
+
+
+    }
+    protected void saveBitmapToPath(Bitmap bitmap) {
+        //String root = Environment.getExternalStorageDirectory().toString();
+        //File myDir = new File(root +  get);
+        File storageDir = getActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        storageDir.mkdirs();
+        File file = new File(storageDir, "profile_img.jpg");
+        if (file.exists())
+            file.delete();
+        try {
+            FileOutputStream out = new FileOutputStream(file);
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 90, out);
+            out.flush();
+            out.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

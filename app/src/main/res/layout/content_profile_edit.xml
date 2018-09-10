@@ -430,6 +430,7 @@
                 android:text="MANAGE MY PHOTOS"
                 android:id="@+id/manage_photos"
                 android:layout_marginBottom="15dp"
+
                 />
 
 

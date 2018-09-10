@@ -178,6 +178,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:alpha=".9"
         android:gravity="center"
+        android:orientation="horizontal"
         >
         <TextView
             android:layout_width="wrap_content"
@@ -185,7 +186,12 @@
             android:textColor="@color/colorWhite"
             android:id="@+id/register_link"
             android:layout_gravity="center_vertical"
-            android:onClick="open_register"/>
+            android:text="Don't have a account yet . Please "/>
+
+        <Button
+            android:layout_height="25dp" android:layout_width="wrap_content"
+            android:onClick="open_register" android:text="Register"/>
+
 
     </LinearLayout>
     <com.facebook.login.widget.LoginButton
