@@ -7,6 +7,8 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -49,7 +51,26 @@ public class Albums extends Fragment  implements  ViewPager.OnPageChangeListener
 
         int position = spref.contains("position") ?  spref.getInt("position",1) : 0;
         viewPager.setCurrentItem(position);
+        setHasOptionsMenu(true);
         return view;
+    }
+
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        // TODO Add your menu entries here
+        menu.findItem(R.id.action_settings).setVisible(false);
+
+
+
+        //  menu.findItem(R.id.action_camera).setVisible(true);
+        menu.findItem(R.id.action_gallery).setVisible(true);
+        inflater.inflate(R.menu.content, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+    @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+
     }
 
     @Override

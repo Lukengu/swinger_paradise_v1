@@ -3,20 +3,25 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
 
-    <item
-        android:id="@+id/action_camera"
-        android:orderInCategory="100"
-        android:title="@string/action_settings"
-        app:showAsAction="always"
-        android:icon="@drawable/ic_photo_camera_black_24dp"
-        android:visible="false"/>
+
     <item
         android:id="@+id/action_gallery"
         android:orderInCategory="100"
         android:title="@string/action_settings"
         app:showAsAction="always"
         android:visible="false"
-        android:icon="@drawable/ic_add_a_photo_black_24dp"/>
+        android:icon="@drawable/ic_add_a_photo_black_24dp">
+        <menu>
+            <item
+                android:id="@+id/nav_from_camera"
+                android:title="From  the camera"
+                />
+            <item
+                android:id="@+id/nav_from_gallery"
+                android:title="From   the gallery"
+                />
+        </menu>
+    </item>
 
 
     <item
