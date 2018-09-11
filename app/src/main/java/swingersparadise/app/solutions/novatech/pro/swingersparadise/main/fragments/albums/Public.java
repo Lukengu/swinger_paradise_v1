@@ -43,6 +43,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 import swingersparadise.app.solutions.novatech.pro.swingersparadise.R;
 import swingersparadise.app.solutions.novatech.pro.swingersparadise.Register;
@@ -70,7 +71,7 @@ public class Public extends Fragment {
         swiper =  view.findViewById(R.id.swiper);
         photosAdapter = new PhotosAdapter(getActivity(),photos,swiper,PhotosAdapter.PUBLIC);
         mRecycler.setAdapter(photosAdapter);
-        GridLayoutManager mGridLayoutManager = new GridLayoutManager(getActivity(), 3);
+        GridLayoutManager mGridLayoutManager = new GridLayoutManager(getActivity(), 4);
         mRecycler.setLayoutManager(mGridLayoutManager);
         mRecycler.setHasFixedSize(true);
         progressDialog = new ProgressDialog(getActivity());
@@ -99,6 +100,17 @@ public class Public extends Fragment {
         // as you specify a parent activity in AndroidManifest.xml.--
         int id = item.getItemId();
 
+        if (id == R.id.nav_from_gallery) {
+            startActivityForResult(
+                    new Intent(
+                            Intent.ACTION_PICK,
+                            MediaStore.Images.Media.INTERNAL_CONTENT_URI
+                    ),
+                    GET_FROM_GALLERY
+            );
+        }
+
+
         if (id == R.id.nav_from_camera) {
 
             Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -126,13 +138,19 @@ public class Public extends Fragment {
     public void onStart() {
         super.onStart();
         photosAdapter.clear();
+        final List<String> _dupe = new ArrayList<>();
+
         FirebaseUser user  = FirebaseAuth.getInstance().getCurrentUser();
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("albums").child(user.getUid()).child("public");
         ref.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for(DataSnapshot photo : dataSnapshot.getChildren()){
-                    photosAdapter.addPhotos(photo.getValue(String.class));
+                    String path = photo.getValue(String.class);
+                    if(!_dupe.contains(path)) {
+                        photosAdapter.addPhotos(path);
+                        _dupe.add(path);
+                    }
                    // Toast.makeText(getActivity(), photo.getValue(String.class), Toast.LENGTH_LONG).show();
                 }
             }
@@ -155,7 +173,7 @@ public class Public extends Fragment {
                 Bitmap selectedImage = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(),data.getData());
 
                 SaveToFirebase(selectedImage);
-                progressDialog.dismiss();
+                photosAdapter.refresh();
 
 
                 //profile_image.setImageBitmap(Bitmap.createScaledBitmap(selectedImage, 136, 136, false));
@@ -180,7 +198,7 @@ public class Public extends Fragment {
             Bitmap  selectedImage  = (Bitmap) extras.get("data");
 
             SaveToFirebase(selectedImage);
-
+            photosAdapter.refresh();
 
 5
           //  profile_image.setImageBitmap(Bitmap.createScaledBitmap(selectedImage, 136, 136, false));
@@ -203,7 +221,7 @@ public class Public extends Fragment {
         final  DatabaseReference db = FirebaseDatabase.getInstance().getReference();
         final String id  = db.child("albums").child(user.getUid()).child("public").push().getKey();
 
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+    /*    ByteArrayOutputStream baos = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
         final String imageEncoded = Base64.encodeToString(baos.toByteArray(), Base64.DEFAULT);
        // DatabaseReference ref = FirebaseDatabase.getInstance()
@@ -214,7 +232,9 @@ public class Public extends Fragment {
         //ref.setValue(imageEncoded);*/
         final File storageDir = getActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES);
         storageDir.mkdirs();
-        final File file = new File(storageDir, imageEncoded+".jpg");
+
+        final File file = new File(storageDir, id+".jpg");
+
         if (file.exists())
             file.delete();
         try {
@@ -230,7 +250,7 @@ public class Public extends Fragment {
 
         final Uri uri = Uri.fromFile(file);
 
-        StorageReference ref = FirebaseStorage.getInstance().getReference().child("albums/"+ user.getUid()+"/public");
+        StorageReference ref = FirebaseStorage.getInstance().getReference().child("albums/"+user.getUid()+"/public/"+id+".jpg");
 
         if(uri != null) {
             ref.putFile(uri)
@@ -238,7 +258,7 @@ public class Public extends Fragment {
                         @Override
                         public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                             progressDialog.dismiss();
-                            db.child("albums").child(user.getUid()).child("public").child(id).setValue(imageEncoded+".jpg");
+                            db.child("albums").child(user.getUid()).child("public").child(id).setValue(id+".jpg");
                             file.delete();
                         }
                     })
@@ -246,6 +266,8 @@ public class Public extends Fragment {
                         @Override
                         public void onFailure(@NonNull Exception e) {
                             progressDialog.dismiss();
+                            file.delete();
+                            e.printStackTrace();
                             Toast.makeText(getActivity(), "Failed " + e.getMessage(), Toast.LENGTH_SHORT).show();
                         }
                     });

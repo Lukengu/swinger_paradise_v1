@@ -1,6 +1,8 @@
 package swingersparadise.app.solutions.novatech.pro.swingersparadise.main.adapters;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.net.Uri;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -13,6 +15,7 @@ import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -25,6 +28,7 @@ import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 
+import swingersparadise.app.solutions.novatech.pro.swingersparadise.Content;
 import swingersparadise.app.solutions.novatech.pro.swingersparadise.R;
 import swingersparadise.app.solutions.novatech.pro.swingersparadise.main.entities.Card;
 
@@ -120,14 +124,52 @@ public class PhotosAdapter extends RecyclerView.Adapter<PhotosAdapter.PhotoViewH
         },3000);
     }
 
-    class PhotoViewHolder extends RecyclerView.ViewHolder {
+    class PhotoViewHolder extends RecyclerView.ViewHolder implements View.OnLongClickListener {
         public ImageView photo;
         public PhotoViewHolder(View itemView) {
             super(itemView);
             photo = itemView.findViewById(R.id.photo);
+            photo.setOnLongClickListener(this);
 
         }
 
 
+        @Override
+        public boolean onLongClick(View v) {
+
+            final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+            final String path =  photos.get(getLayoutPosition());
+            final String photo_id = path.replace(".jpg", "");
+            final String im_path =  view == PUBLIC  ? "public":"private";
+
+            android.support.v7.app.AlertDialog aDialog = new android.support.v7.app.AlertDialog.Builder(c).setMessage("Are you sure to delete the photos?").setTitle("Deleting photo")
+                    .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                        public void onClick(final DialogInterface dialog,
+                                            final int which) {
+                            //Prevent to finish activity, if user clicks about.
+                            StorageReference ref = FirebaseStorage.getInstance().getReference().child("albums/"+user.getUid()+"/"+im_path+"/"+path);
+                            ref.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void aVoid) {
+                                    final  DatabaseReference db = FirebaseDatabase.getInstance().getReference();
+                                    db.child("albums").child(user.getUid()).child("public").child(photo_id).removeValue();
+                                    PhotosAdapter.this.refresh();
+                                }
+                            });
+
+                        }
+                    })
+                    .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                        public void onClick(final DialogInterface dialog,
+                                            final int which) {
+                        }
+                    })
+                    .create();
+            aDialog.setIcon(R.drawable.ic_error_green_24dp);
+            aDialog.show();
+
+
+            return true;
+        }
     }
 }
