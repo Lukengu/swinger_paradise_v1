@@ -96,7 +96,7 @@ public class Public extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
+        // as you specify a parent activity in AndroidManifest.xml.--
         int id = item.getItemId();
 
         if (id == R.id.nav_from_camera) {
@@ -182,7 +182,7 @@ public class Public extends Fragment {
             SaveToFirebase(selectedImage);
 
 
-
+5
           //  profile_image.setImageBitmap(Bitmap.createScaledBitmap(selectedImage, 136, 136, false));
             //editor.putString("selected_image",   getActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES).getPath().concat("/profile_img.jpg"));
             //saveBitmapToPath(selectedImage);
