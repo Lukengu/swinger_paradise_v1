@@ -123,7 +123,7 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.FriendVi
         });
 
         holder.display_name.setText(cards.get(position).getDisplay_name());
-        if(!TextUtils.isEmpty(cards.get(position).getAge())) {
+        if(!TextUtils.isEmpty(String.valueOf(cards.get(position).getAge()))) {
             holder.age.setText(","+cards.get(position).getAge());
         }
 

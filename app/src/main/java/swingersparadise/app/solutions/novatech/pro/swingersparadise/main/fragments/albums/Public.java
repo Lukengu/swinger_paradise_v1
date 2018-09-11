@@ -12,16 +12,13 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
@@ -37,7 +34,6 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -46,10 +42,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import swingersparadise.app.solutions.novatech.pro.swingersparadise.R;
-import swingersparadise.app.solutions.novatech.pro.swingersparadise.Register;
-import swingersparadise.app.solutions.novatech.pro.swingersparadise.main.adapters.FriendsAdapter;
 import swingersparadise.app.solutions.novatech.pro.swingersparadise.main.adapters.PhotosAdapter;
-import swingersparadise.app.solutions.novatech.pro.swingersparadise.main.entities.Card;
 
 public class Public extends Fragment {
 
@@ -200,7 +193,7 @@ public class Public extends Fragment {
             SaveToFirebase(selectedImage);
             photosAdapter.refresh();
 
-5
+
           //  profile_image.setImageBitmap(Bitmap.createScaledBitmap(selectedImage, 136, 136, false));
             //editor.putString("selected_image",   getActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES).getPath().concat("/profile_img.jpg"));
             //saveBitmapToPath(selectedImage);

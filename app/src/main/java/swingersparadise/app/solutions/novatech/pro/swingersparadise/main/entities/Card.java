@@ -11,7 +11,7 @@ public class Card implements Serializable {
     private String display_name;
     private String uuid;
     private String gender;
-    private String age;
+    private long age;
     private String drinking;
     private String body_part;
     private String build;
@@ -67,11 +67,11 @@ public class Card implements Serializable {
         this.gender = gender;
     }
 
-    public String getAge() {
+    public long getAge() {
         return age;
     }
 
-    public void setAge(String age) {
+    public void setAge(long age) {
         this.age = age;
     }
 
