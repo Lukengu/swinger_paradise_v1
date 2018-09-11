@@ -8,6 +8,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -138,7 +139,7 @@ public class Profiles extends Fragment{
                         Map<String, String> data = new HashMap<>();
 
 
-                        data.put("uuid", dataSnapshot.getKey());
+                      /  data.put("uuid", dataSnapshot.getKey());
                         data.put("display_name", dataSnapshot.hasChild("display_name") ? dataSnapshot.child("display_name").getValue().toString() : "");
                         data.put("drinking", dataSnapshot.hasChild("drinking") ? dataSnapshot.child("drinking").getValue().toString() : "");
                         data.put("age", dataSnapshot.hasChild("age") ? dataSnapshot.child("age").getValue().toString() : "");
@@ -160,8 +161,10 @@ public class Profiles extends Fragment{
                         Card card = null;
                         try {
                             card = new Card(jsonObject);
-                            cards.add(card);
-                            mSwipeView.addView(new TinderCard(getActivity(), card, mSwipeView, Profiles.this));
+                            if(!TextUtils.isEmpty(card.getGender())) {
+                                cards.add(card);
+                                mSwipeView.addView(new TinderCard(getActivity(), card, mSwipeView, Profiles.this));
+                            }
 
                             //  getActivity().setTitle(card.getDisplay_name());
                         } catch (IllegalAccessException e) {
