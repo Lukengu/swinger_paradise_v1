@@ -121,6 +121,9 @@ public class Profiles extends Fragment{
 
     private void CardInfos() {
         progressDialog.show();
+
+
+
         users_db.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
@@ -138,8 +141,7 @@ public class Profiles extends Fragment{
                     if(!exclude){
                         Map<String, String> data = new HashMap<>();
 
-
-                      /  data.put("uuid", dataSnapshot.getKey());
+                        data.put("uuid", dataSnapshot.getKey());
                         data.put("display_name", dataSnapshot.hasChild("display_name") ? dataSnapshot.child("display_name").getValue().toString() : "");
                         data.put("drinking", dataSnapshot.hasChild("drinking") ? dataSnapshot.child("drinking").getValue().toString() : "");
                         data.put("age", dataSnapshot.hasChild("age") ? dataSnapshot.child("age").getValue().toString() : "");
@@ -161,7 +163,7 @@ public class Profiles extends Fragment{
                         Card card = null;
                         try {
                             card = new Card(jsonObject);
-                            if(!TextUtils.isEmpty(card.getGender())) {
+                            if(!TextUtils.isEmpty(card.getGender()) && !TextUtils.isEmpty(card.getMarital_status())) {
                                 cards.add(card);
                                 mSwipeView.addView(new TinderCard(getActivity(), card, mSwipeView, Profiles.this));
                             }
