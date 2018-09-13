@@ -185,7 +185,7 @@ public class Conversations extends Fragment {
     }
 
     //--- DATA IS ADDING WITHIN SINGLE HOLDER-----
-    public  class ConvViewHolder extends RecyclerView.ViewHolder{
+    public static class ConvViewHolder extends RecyclerView.ViewHolder{
 
         View mView;
 
@@ -214,7 +214,7 @@ public class Conversations extends Fragment {
         }
 
 
-        public void setUserImage(String userThumb, Context context) {
+        public void setUserImage(String userThumb, final Context context) {
 
             final CircleImageView userImageView = mView.findViewById(R.id.circleImageViewUserImage);
 
@@ -223,7 +223,7 @@ public class Conversations extends Fragment {
             ref.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                 @Override
                 public void onSuccess(final Uri uri) {
-                    Glide.with(getActivity())
+                    Glide.with(context)
                             .load(uri.toString())
                             .into(userImageView);
 
