@@ -340,15 +340,12 @@ public class SingleChat extends AppCompatActivity {
                 }
 
 
-
-               // if(messages.getFrom().equals(mChatUser)){
-                if(mChatUser.equals(messages.getFrom())){
+                if(!messages.getFrom().equals(mCurrentUserId) && getIntent().getExtras().containsKey("user_id")){
                     messages.setSeen(true);
                     mRootReference.child("messages").child(mChatUser).child(mCurrentUserId).child(dataSnapshot.getKey()).child("seen").setValue(true);
                     mRootReference.child("messages").child(mCurrentUserId).child(mChatUser).child(dataSnapshot.getKey()).child("seen").setValue(true);
-                }
 
-                //}
+                }
 
                 messagesList.add(messages);
                 mMessageAdapter.notifyDataSetChanged();
