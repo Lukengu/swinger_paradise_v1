@@ -139,7 +139,7 @@ public class Profiles extends Fragment{
                         Map<String, String> data = new HashMap<>();
 
 
-                      /  data.put("uuid", dataSnapshot.getKey());
+                        data.put("uuid", dataSnapshot.getKey());
                         data.put("display_name", dataSnapshot.hasChild("display_name") ? dataSnapshot.child("display_name").getValue().toString() : "");
                         data.put("drinking", dataSnapshot.hasChild("drinking") ? dataSnapshot.child("drinking").getValue().toString() : "");
                         data.put("age", dataSnapshot.hasChild("age") ? dataSnapshot.child("age").getValue().toString() : "");
@@ -171,6 +171,8 @@ public class Profiles extends Fragment{
                             e.printStackTrace();
                         }
                     }
+
+
 
                 }
                 progressDialog.dismiss();
