@@ -17,12 +17,14 @@ import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.ActionBar;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
@@ -59,12 +61,15 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
 
+import de.hdodenhof.circleimageview.CircleImageView;
 import swingersparadise.app.solutions.novatech.pro.swingersparadise.AppConfig;
 import swingersparadise.app.solutions.novatech.pro.swingersparadise.ProfileView;
 import swingersparadise.app.solutions.novatech.pro.swingersparadise.R;
 import swingersparadise.app.solutions.novatech.pro.swingersparadise.main.adapters.AlbumAdapter;
 import swingersparadise.app.solutions.novatech.pro.swingersparadise.main.entities.Card;
+import swingersparadise.app.solutions.novatech.pro.swingersparadise.main.fragments.Profiles;
 import swingersparadise.app.solutions.novatech.pro.swingersparadise.utils.GenderConverter;
 
 
@@ -132,6 +137,7 @@ public class TinderCard implements android.view.View.OnClickListener {
     private Fragment parent;
     private String key ="";
 
+
     public static final String PREFERENCE= "tinder_card";
 
 
@@ -140,6 +146,7 @@ public class TinderCard implements android.view.View.OnClickListener {
         mCard = card;
         mSwipeView = swipeView;
         this.parent = parent;
+
 
 
 
@@ -166,11 +173,14 @@ public class TinderCard implements android.view.View.OnClickListener {
                         .load(uri.toString())
                         .into(profileImageView);
                // changes.firePropertyChange("mCard",null, mCard);
-
+                //cards.add(mCard);
 
             }
 
         });
+
+
+
 
         if(!TextUtils.isEmpty(mCard.getGender()))
             gender.setImageDrawable( mContext.getResources().getDrawable(GenderConverter.convert(mCard)));
@@ -195,7 +205,7 @@ public class TinderCard implements android.view.View.OnClickListener {
         );*/
 
 
-        parent.getActivity().setTitle(mCard.getDisplay_name());
+       // parent.getActivity().setTitle(mCard.getDisplay_name());
         connect_no.setOnClickListener(this);
         connect_yes.setOnClickListener(this);
         unlock_action.setOnClickListener(this);
@@ -383,7 +393,7 @@ public class TinderCard implements android.view.View.OnClickListener {
 
         mSwipeView.addView(this);
         //changes.firePropertyChange("mCard",null, mCard);
-        parent.getActivity().setTitle(mCard.getDisplay_name());
+       // parent.getActivity().setTitle(mCard.getDisplay_name());
     }
 
     @SwipeCancelState
@@ -397,7 +407,7 @@ public class TinderCard implements android.view.View.OnClickListener {
         // user_db.child(mCard.getOpposite_gender()).child(mCard.getUuid()).child("Connections").child("Yep").child(firebaseAuth.getCurrentUser().getUid()).setValue("true");
         user_db.child(mCard.getUuid()).child("connections").child("yep").child(firebaseAuth.getCurrentUser().getUid()).setValue("true");
         //changes.firePropertyChange("mCard",null, mCard);
-        parent.getActivity().setTitle(mCard.getDisplay_name());
+      //  \parent.getActivity().setTitle(mCard.getDisplay_name());
 
     }
 

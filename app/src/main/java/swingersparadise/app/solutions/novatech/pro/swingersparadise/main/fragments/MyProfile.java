@@ -279,7 +279,7 @@ public class MyProfile extends Fragment {
                 }
 
                 users_db.child(user.getUid()).child("display_name").setValue(display_name.getText().toString());
-                users_db.child(user.getUid()).child("age").setValue(age.getText().toString());
+                users_db.child(user.getUid()).child("age").setValue(Integer.parseInt(age.getText().toString()));
                 users_db.child(user.getUid()).child("gender").setValue(gender.getSelectedItem().toString());
                 users_db.child(user.getUid()).child("marital_status").setValue(marital_status.getSelectedItem().toString());
                 users_db.child(user.getUid()).child("ethnicity").setValue(ethnicity.getSelectedItem().toString());

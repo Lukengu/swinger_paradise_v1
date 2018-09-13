@@ -1,8 +1,10 @@
 package swingersparadise.app.solutions.novatech.pro.swingersparadise;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
@@ -10,7 +12,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -75,6 +79,9 @@ public class SingleChat extends AppCompatActivity {
     private int itemPos = 0;
     private String mLastKey="";
     private String mPrevKey="";
+    private Boolean typingStarted;
+    private SharedPreferences spref;
+    private DatabaseReference user_message_push_typing;
 
     private static final int GALLERY_PICK=1;
     StorageReference mImageStorage;
@@ -85,6 +92,9 @@ public class SingleChat extends AppCompatActivity {
         setContentView(R.layout.single_chat);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+
+        spref = PreferenceManager.getDefaultSharedPreferences(this);
 
         mChatAddButton = (ImageButton)findViewById(R.id.chatAddButton);
         mChatSendButton = (ImageButton)findViewById(R.id.chatSendButton);
@@ -232,6 +242,9 @@ public class SingleChat extends AppCompatActivity {
             }
         });
 
+
+
+
         //----SEND MESSAGE--BUTTON----
 
         mChatSendButton.setOnClickListener(new View.OnClickListener() {
@@ -267,7 +280,7 @@ public class SingleChat extends AppCompatActivity {
                                 Log.e("CHAT_ACTIVITY","Cannot add message to database");
                             }
                             else{
-                                Toast.makeText(SingleChat.this, "Message sent", Toast.LENGTH_SHORT).show();
+                               // Toast.makeText(SingleChat.this, "Message sent", Toast.LENGTH_SHORT).show();
                                 mMessageView.setText("");
                             }
 
@@ -326,8 +339,18 @@ public class SingleChat extends AppCompatActivity {
                     mPrevKey = mMessageKey;
                 }
 
+
+                if(!messages.getFrom().equals(mCurrentUserId) && getIntent().getExtras().containsKey("user_id")){
+                    messages.setSeen(true);
+                    mRootReference.child("messages").child(mChatUser).child(mCurrentUserId).child(dataSnapshot.getKey()).child("seen").setValue(true);
+                    mRootReference.child("messages").child(mCurrentUserId).child(mChatUser).child(dataSnapshot.getKey()).child("seen").setValue(true);
+
+                }
+
                 messagesList.add(messages);
                 mMessageAdapter.notifyDataSetChanged();
+
+
 
                 mMessagesList.scrollToPosition(messagesList.size()-1);
 

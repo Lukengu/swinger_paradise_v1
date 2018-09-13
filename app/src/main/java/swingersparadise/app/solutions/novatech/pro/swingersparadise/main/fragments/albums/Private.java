@@ -61,7 +61,7 @@ public class Private  extends Fragment{
 
         mRecycler = view.findViewById(R.id.mRecycler);
         swiper =  view.findViewById(R.id.swiper);
-        photosAdapter = new PhotosAdapter(getActivity(),photos,swiper,PhotosAdapter.PUBLIC);
+        photosAdapter = new PhotosAdapter(getActivity(),photos,swiper,PhotosAdapter.PRIVATE);
         mRecycler.setAdapter(photosAdapter);
         GridLayoutManager mGridLayoutManager = new GridLayoutManager(getActivity(), 4);
         mRecycler.setLayoutManager(mGridLayoutManager);
