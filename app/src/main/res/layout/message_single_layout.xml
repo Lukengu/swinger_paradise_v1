@@ -3,7 +3,8 @@
     android:id="@+id/messageSingleLayout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="10dp">
+    android:padding="10dp"
+    android:background="@color/colorWhite">
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/messageProfileLayout"
         android:layout_width="56dp"

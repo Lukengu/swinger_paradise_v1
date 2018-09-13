@@ -1,7 +1,9 @@
 package swingersparadise.app.solutions.novatech.pro.swingersparadise.main.fragments.chat;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Typeface;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -14,7 +16,9 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -23,10 +27,13 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import swingersparadise.app.solutions.novatech.pro.swingersparadise.R;
+import swingersparadise.app.solutions.novatech.pro.swingersparadise.SingleChat;
 import swingersparadise.app.solutions.novatech.pro.swingersparadise.main.entities.Conv;
 
 public class Conversations extends Fragment {
@@ -156,10 +163,10 @@ public class Conversations extends Fragment {
                             @Override
                             public void onClick(View v) {
 
-                             /*   Intent chatIntent = new Intent(getContext(),ChatActivity.class);
+                                Intent chatIntent = new Intent(getContext(),SingleChat.class);
                                 chatIntent.putExtra("user_id",list_user_id);
                                 chatIntent.putExtra("user_name",userName);
-                                startActivity(chatIntent);*/
+                                startActivity(chatIntent);
                             }
                         });
                     }
@@ -178,7 +185,7 @@ public class Conversations extends Fragment {
     }
 
     //--- DATA IS ADDING WITHIN SINGLE HOLDER-----
-    public static class ConvViewHolder extends RecyclerView.ViewHolder{
+    public  class ConvViewHolder extends RecyclerView.ViewHolder{
 
         View mView;
 
@@ -209,10 +216,21 @@ public class Conversations extends Fragment {
 
         public void setUserImage(String userThumb, Context context) {
 
-            CircleImageView userImageView = mView.findViewById(R.id.circleImageViewUserImage);
+            final CircleImageView userImageView = mView.findViewById(R.id.circleImageViewUserImage);
 
             //--SETTING IMAGE FROM USERTHUMB TO USERIMAGEVIEW--- IF ERRORS OCCUR , ADD USER_IMG----
-            Picasso.with(context).load(userThumb).placeholder(R.drawable.ic_person_pin_black_64dp).into(userImageView);
+            StorageReference ref = FirebaseStorage.getInstance().getReference().child("profiles/" + userThumb);
+            ref.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                @Override
+                public void onSuccess(final Uri uri) {
+                    Glide.with(getActivity())
+                            .load(uri.toString())
+                            .into(userImageView);
+
+
+                }
+
+            });
         }
 
 
