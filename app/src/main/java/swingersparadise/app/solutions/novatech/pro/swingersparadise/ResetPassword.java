@@ -52,6 +52,8 @@ public class ResetPassword extends AppCompatActivity {
             email.setError("Email Required");
         } else {
             final ProgressDialog progressDialog = new ProgressDialog(this);
+            progressDialog.setMessage("Please wait ...");
+
             progressDialog.show();
             FirebaseAuth.getInstance().sendPasswordResetEmail(email.getText().toString())
                     .addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -60,8 +62,8 @@ public class ResetPassword extends AppCompatActivity {
                             if (task.isSuccessful()) {
                                 progressDialog.dismiss();
                                 Snackbar snackbar = Snackbar.make(root_view, "An Email has been sent to "+ email.getText().toString(), Snackbar.LENGTH_LONG);
-
                                 snackbar.show();
+                                email.setText("");
                             }
                         }
                     })
@@ -82,6 +84,7 @@ public class ResetPassword extends AppCompatActivity {
 
 
                             snackbar.show();
+                            email.setText("");
                         }
                     });
 

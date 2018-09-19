@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -60,7 +61,7 @@ public class SingleChat extends AppCompatActivity {
     String mCurrentUserId;
 
     DatabaseReference mDatabaseReference;
-    private DatabaseReference mRootReference;
+    private DatabaseReference mRootReference, mChatRootRef,mMessagesRef;
 
     private ImageButton mChatSendButton,mChatAddButton;
     private EditText mMessageView;
@@ -85,6 +86,7 @@ public class SingleChat extends AppCompatActivity {
 
     private static final int GALLERY_PICK=1;
     StorageReference mImageStorage;
+    long  active_chats = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -106,6 +108,8 @@ public class SingleChat extends AppCompatActivity {
 
         //---SETTING ONLINE------
         mDatabaseReference = FirebaseDatabase.getInstance().getReference().child("users");
+        mChatRootRef = FirebaseDatabase.getInstance().getReference().child("chats");
+        mMessagesRef= FirebaseDatabase.getInstance().getReference().child("messages");
 
         //----ADDING ACTION BAR-----
         ActionBar actionBar = getSupportActionBar();
@@ -282,6 +286,7 @@ public class SingleChat extends AppCompatActivity {
                             else{
                                // Toast.makeText(SingleChat.this, "Message sent", Toast.LENGTH_SHORT).show();
                                 mMessageView.setText("");
+                                //Send Notification
                             }
 
                         }
@@ -319,11 +324,63 @@ public class SingleChat extends AppCompatActivity {
 
     }
 
+
+    private void sendNotification(){
+
+        final List<Messages> messagesList = new ArrayList<>();
+
+
+        mChatRootRef.child(mCurrentUserId).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                active_chats = dataSnapshot.getChildrenCount();
+                if(active_chats == 1) {
+                    mMessagesRef.child(mCurrentUserId).child(mChatUser).addChildEventListener(new ChildEventListener() {
+                        @Override
+                        public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+                            Messages messages =  dataSnapshot.getValue(Messages.class);
+                            messagesList.add(messages);
+                        }
+
+                        @Override
+                        public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+                        }
+
+                        @Override
+                        public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+
+                        }
+
+                        @Override
+                        public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                        }
+                    });
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+    }
+
     //---FIRST 10 MESSAGES WILL LOAD ON START----
     private void loadMessages() {
 
         DatabaseReference messageRef = mRootReference.child("messages").child(mCurrentUserId).child(mChatUser);
         Query messageQuery = messageRef.limitToLast(mCurrentPage*TOTAL_ITEM_TO_LOAD);
+
+
 
         messageQuery.addChildEventListener(new ChildEventListener() {
             @Override

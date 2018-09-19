@@ -320,6 +320,7 @@ public class Content extends AppCompatActivity
 
                             myConnectionsRef.removeValue();
                             mAuth.signOut();
+                            PreferenceManager.getDefaultSharedPreferences(Content.this).edit().remove("display_name").commit();
                             startActivity(new Intent(Content.this, Login.class));
                         }
 
