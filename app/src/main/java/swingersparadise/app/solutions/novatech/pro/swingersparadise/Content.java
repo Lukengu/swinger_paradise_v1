@@ -181,7 +181,7 @@ public class Content extends AppCompatActivity
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     for (DataSnapshot userSnapshot : dataSnapshot.getChildren()) {
                         if (userSnapshot.getKey().equals(currentUser.getUid())) {
-                            card = userSnapshot.getValue(Card.class);
+                                    card = userSnapshot.getValue(Card.class);
                             display_name.setText(card.getDisplay_name());
                             editor.putString("display_name", card.getDisplay_name()).commit();
                             if ((TextUtils.isEmpty(card.getDisplay_name()) || TextUtils.isEmpty(card.getGender()) ||
@@ -320,6 +320,7 @@ public class Content extends AppCompatActivity
 
                             myConnectionsRef.removeValue();
                             mAuth.signOut();
+                            PreferenceManager.getDefaultSharedPreferences(Content.this).edit().remove("display_name").commit();
                             startActivity(new Intent(Content.this, Login.class));
                         }
 

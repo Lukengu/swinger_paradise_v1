@@ -24,6 +24,12 @@ public class Card implements Serializable {
     private String smoking;
     private String email;
     private String name;
+    private String  city;
+    private String province;
+    private String profile_type;
+
+
+
 
 
 
@@ -173,5 +179,29 @@ public class Card implements Serializable {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public String getProvince() {
+        return province;
+    }
+
+    public void setProvince(String province) {
+        this.province = province;
+    }
+
+    public String getProfile_type() {
+        return profile_type;
+    }
+
+    public void setProfile_type(String profile_type) {
+        this.profile_type = profile_type;
     }
 }

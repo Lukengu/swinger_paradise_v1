@@ -240,9 +240,8 @@ public class Register extends AppCompatActivity {
                     spref.contains("email_address") &&
                     spref.contains("password") &&
                     spref.contains("conf_password") &&
+                    spref.contains("profile_type") &&
                     spref.contains("mobile_number"));
-
-
 
         return true;
     }
@@ -274,6 +273,7 @@ public class Register extends AppCompatActivity {
                     db.child("about_me").setValue(spref.getString("about_me",""));
                     db.child("body_part").setValue(spref.getString("body_part",""));
                     db.child("build").setValue(spref.getString("build",""));
+                    db.child("profile_type").setValue(spref.getString("profile_type",""));
                     db.child("mobile_number").setValue(spref.getString("dial_code","").concat(spref.getString("mobile_number","")));
                     db.child("country").setValue(spref.getString("country",""));
                     db.child("display_name").setValue(spref.getString("display_name",""));
@@ -288,6 +288,8 @@ public class Register extends AppCompatActivity {
                     db.child("smoking").setValue(spref.getString("smoking",""));
                     db.child("surname").setValue(spref.getString("surname",""));
                     db.child("gender").setValue(spref.getString("gender",""));
+                    db.child("city").setValue(spref.getString("city",""));
+                    db.child("province").setValue(spref.getString("province",""));
 
 
 
@@ -303,13 +305,15 @@ public class Register extends AppCompatActivity {
                                         progressDialog.dismiss();
                                         editor.putBoolean("has_registered", true).commit();
                                         editor.putString("uuid", uuid).commit();
+                                        editor.remove("profile_type").commit();
+                                        editor.remove("display_name").commit();
                                         editor.remove("about_me").commit();
                                         editor.remove("body_part").commit();
                                         editor.remove("build").commit();
                                         editor.remove("country_code").commit();
                                         editor.remove("mobile_number").commit();
                                         editor.remove("country").commit();
-                                        editor.remove("display_name").commit();
+                                       // editor.remove("display_name").commit();
                                         editor.remove("drinking").commit();
                                         editor.remove("ethnicity").commit();
                                         editor.remove("hair_colour").commit();
@@ -322,6 +326,8 @@ public class Register extends AppCompatActivity {
                                         editor.remove("email_address").commit();
                                         editor.remove("password").commit();
                                         editor.remove("conf_password").commit();
+                                        editor.remove("city").commit();
+                                        editor.remove("province").commit();
 
                                         startActivity(new Intent(Register.this, Content.class));
                                         finish();

@@ -21,7 +21,12 @@
         <item>Married with permission to swing</item>
         <item>Open Relationship</item>
     </string-array>
-
+    <string-array name="profile_type">
+        <item>Profile Type</item>
+        <item>Single Male</item>
+        <item>Single FeMale</item>
+        <item>Couple</item>
+    </string-array>
     <string-array name="build">
         <item>Build</item>
         <item>Little Person</item>
@@ -78,10 +83,20 @@
         <item>Red</item>
         <item>Gray</item>
     </string-array>
+    
     <string-array name="gender">
-        <item>Gender</item>
-        <item>Male</item>
         <item>Female</item>
+        <item>Straight Malee</item>
+        <item>Bi Malee</item>
+        <item>Bi Curious Malee</item>
+        <item>Gay Malee</item>
+        <item>Transsexual Male</item>
+        <item>Straight Female</item>
+        <item>Bi Female</item>
+        <item>Bi Curious Female</item>
+        <item>Gay Female</item>
+        <item>Transsexual Female</item>
+
     </string-array>
 
     <string-array name="sexual_preferences">
@@ -95,6 +110,7 @@
         <item>Threesomes</item>
         <item>Anal sex</item>
         <item>Safe Sex</item>
+        <item>Phone Sex</item>
         <item> Group sex</item>
         <item>Gang bangs</item>
         <item>Clubs and Parties</item>
@@ -104,6 +120,25 @@
         <item>Role play</item>
         <item>Just Watching</item>
         <item>Being Watched in Private setting</item>
+        <item>Exhibitionism</item>
+        <item>Making videos</item>
+        <item>Straight sex</item>
+        <item>Fisting</item>
+        <item>B and D</item>
+        <item>Dogging</item>
+        <item>Cyber sex</item>
+        <item>Spanking</item>
+        <item>Watersports</item>
+        <item>Double Penetration</item>
+        <item>Fetishes</item>
+        <item>Cuckolding</item>
+        <item>Adult parties</item>
+        <item>Erotic writing</item>
+        <item>Group Holidays</item>
+        <item>Cuckqueaning</item>
+         <item>S and M</item>
+        <item>Sensual Domination</item>
+        <item>Stag and Hotwifing (Vixen)</item>
     </string-array>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>

@@ -52,6 +52,21 @@
         android:id="@+id/age"
         style="@style/SwingersEditTextStyle"/>
 
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Height"
+
+
+        android:tooltipText="Height"
+        android:inputType="number"
+        android:id="@+id/height"
+        style="@style/SwingersEditTextStyle"/>
+
+
+
+
     <Spinner
         android:id="@+id/gender"
         android:layout_width="match_parent"
