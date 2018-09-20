@@ -261,7 +261,7 @@ public class SingleChat extends AppCompatActivity {
 
                     String push_id = user_message_push.getKey();
 
-                    Map messageMap = new HashMap();
+                    final Map messageMap = new HashMap();
                     messageMap.put("message",message);
                     messageMap.put("seen",false);
                     messageMap.put("type","text");
@@ -282,6 +282,7 @@ public class SingleChat extends AppCompatActivity {
                             else{
                                // Toast.makeText(SingleChat.this, "Message sent", Toast.LENGTH_SHORT).show();
                                 mMessageView.setText("");
+                                sendNotification(messageMap);
                             }
 
                         }
@@ -316,6 +317,11 @@ public class SingleChat extends AppCompatActivity {
 
             }
         });
+
+    }
+
+    private void sendNotification(Map messageMap){
+
 
     }
 
