@@ -1,12 +1,16 @@
 package swingersparadise.app.solutions.novatech.pro.swingersparadise;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -39,8 +43,15 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.loopj.android.http.AsyncHttpClient;
+import com.loopj.android.http.JsonHttpResponseHandler;
 import com.squareup.picasso.Picasso;
 
+import org.apache.http.Header;
+import org.apache.http.entity.StringEntity;
+import org.json.JSONObject;
+
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -81,12 +92,13 @@ public class SingleChat extends AppCompatActivity {
     private String mLastKey="";
     private String mPrevKey="";
     private Boolean typingStarted;
-    private SharedPreferences spref;
+
     private DatabaseReference user_message_push_typing;
 
     private static final int GALLERY_PICK=1;
     StorageReference mImageStorage;
     long  active_chats = 0;
+    private SharedPreferences spref;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -227,10 +239,11 @@ public class SingleChat extends AppCompatActivity {
                         @Override
                         public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
                             if(databaseError == null){
-                                Toast.makeText(getApplicationContext(), "Successfully Added chats feature", Toast.LENGTH_SHORT).show();
+                              //  Toast.makeText(getApplicationContext(), "Successfully Added chats feature", Toast.LENGTH_SHORT).show();
                             }
-                            else
-                                Toast.makeText(getApplicationContext(), "Cannot Add chats feature", Toast.LENGTH_SHORT).show();
+                            else {
+                                //   Toast.makeText(getApplicationContext(), "Cannot Add chats feature", Toast.LENGTH_SHORT).show();
+                            }
                         }
 
 
@@ -254,7 +267,7 @@ public class SingleChat extends AppCompatActivity {
         mChatSendButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String message = mMessageView.getText().toString();
+               final  String message = mMessageView.getText().toString();
                 if(!TextUtils.isEmpty(message)){
 
                     String current_user_ref = "messages/"+mCurrentUserId+"/"+mChatUser;
@@ -284,7 +297,38 @@ public class SingleChat extends AppCompatActivity {
                                 Log.e("CHAT_ACTIVITY","Cannot add message to database");
                             }
                             else{
-                                // Toast.makeText(SingleChat.this, "Message sent", Toast.LENGTH_SHORT).show();
+                                final MediaPlayer mp = MediaPlayer.create(SingleChat.this, R.raw.sms_alert);
+                                mp.start();
+                                Toast.makeText(SingleChat.this, "Message sent", Toast.LENGTH_SHORT).show();
+                                String display_name = spref.getString("display_name", "");
+
+                                String notification_message = "{\"interests\":[\""+mChatUser+"\"],\"fcm\":{\"notification\":{\"title\":\""+display_name+"\",\"body\":\""+message+"\"}}}";
+                                AsyncHttpClient client = new AsyncHttpClient();
+                                client.addHeader("content-type", "application/json");
+                                client.addHeader("authorization", "Bearer "+ AppConfig.auth_key);
+                                try {
+                                    StringEntity entity = new StringEntity(notification_message);
+                                    client.post(SingleChat.this,AppConfig.pusher_notification_enpoint,null,entity,"application/json",new JsonHttpResponseHandler() {
+                                        @Override
+                                        public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                                            Log.i("Request", AppConfig.pusher_notification_enpoint);
+                                            Log.i("Response", response.toString());
+                                            Toast.makeText(SingleChat.this, response.toString(), Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(SingleChat.this,mChatUser, Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(SingleChat.this,message, Toast.LENGTH_SHORT).show();
+
+                                        }
+                                        @Override
+                                        public void onFailure(int statusCode, Header[] headers, String res, Throwable t) {
+                                            Log.e("Response", t.getMessage());
+                                            // mCallBack.onFailure(new ClientException(t));
+
+                                        }
+                                    });
+                                } catch (UnsupportedEncodingException e) {
+                                    e.printStackTrace();
+                                }
+
                                 mMessageView.setText("");
                                 //Send Notification
                             }
