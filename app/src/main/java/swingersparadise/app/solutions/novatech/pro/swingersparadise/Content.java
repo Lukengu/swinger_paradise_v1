@@ -47,6 +47,7 @@ import java.util.Map;
 
 import swingersparadise.app.solutions.novatech.pro.swingersparadise.main.entities.Card;
 import swingersparadise.app.solutions.novatech.pro.swingersparadise.main.fragments.Albums;
+import swingersparadise.app.solutions.novatech.pro.swingersparadise.main.fragments.Cards;
 import swingersparadise.app.solutions.novatech.pro.swingersparadise.main.fragments.Chat;
 import swingersparadise.app.solutions.novatech.pro.swingersparadise.main.fragments.Friends;
 import swingersparadise.app.solutions.novatech.pro.swingersparadise.main.fragments.Kamasutra;
@@ -352,7 +353,7 @@ public class Content extends AppCompatActivity
         if ("discover".equals(name)) {
 
             // insert detail fragment into detail container
-            f = new Profiles();
+            f = new Cards();
             setTitle("Discover");
 
         }
