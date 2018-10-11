@@ -60,18 +60,24 @@ public class FullScreenImageAdapter extends PagerAdapter {
 
         final ImageView imgDisplay = viewLayout.findViewById(R.id.imgDisplay);
 
-        StorageReference ref = FirebaseStorage.getInstance().getReference().child("albums/"+uuid+"/public/"+_photos.get(position));
+        if(!"none".equals(uuid)) {
+            StorageReference ref = FirebaseStorage.getInstance().getReference().child("albums/" + uuid + "/public/" + _photos.get(position));
 
 
-        ref.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-            @Override
-            public void onSuccess(final Uri uri) {
+            ref.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                @Override
+                public void onSuccess(final Uri uri) {
 
-                Glide.with(_context)
-                        .load(uri.toString())
-                        .into(imgDisplay);
-            }
-        });
+                    Glide.with(_context)
+                            .load(uri.toString())
+                            .into(imgDisplay);
+                }
+            });
+        } else {
+            Glide.with(_context)
+                    .load(_photos.get(position))
+                    .into(imgDisplay);
+        }
 
 
        container.addView(viewLayout);

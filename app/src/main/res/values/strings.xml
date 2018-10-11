@@ -26,6 +26,8 @@
         <item>Single Male</item>
         <item>Single FeMale</item>
         <item>Couple</item>
+        <item>Male Couple</item>
+        <item>Female Couple</item>
     </string-array>
     <string-array name="build">
         <item>Build</item>

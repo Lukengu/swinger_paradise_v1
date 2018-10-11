@@ -47,8 +47,10 @@ import java.util.Map;
 
 import swingersparadise.app.solutions.novatech.pro.swingersparadise.main.entities.Card;
 import swingersparadise.app.solutions.novatech.pro.swingersparadise.main.fragments.Albums;
+import swingersparadise.app.solutions.novatech.pro.swingersparadise.main.fragments.Cards;
 import swingersparadise.app.solutions.novatech.pro.swingersparadise.main.fragments.Chat;
 import swingersparadise.app.solutions.novatech.pro.swingersparadise.main.fragments.Friends;
+import swingersparadise.app.solutions.novatech.pro.swingersparadise.main.fragments.Kamasutra;
 import swingersparadise.app.solutions.novatech.pro.swingersparadise.main.fragments.Profiles;
 import swingersparadise.app.solutions.novatech.pro.swingersparadise.main.fragments.Matches;
 import swingersparadise.app.solutions.novatech.pro.swingersparadise.main.fragments.MyProfile;
@@ -306,6 +308,12 @@ public class Content extends AppCompatActivity
                 editor.putInt("selected_menu", R.id.nav_album).commit();
                 loadFragment("albums", null);
                 break;
+            case R.id.nav_gallery:
+                editor.putInt("selected_menu", R.id.nav_gallery).commit();
+                loadFragment("kamasutra", null);
+                break;
+
+
 
 
             case R.id.nav_logout:
@@ -345,7 +353,7 @@ public class Content extends AppCompatActivity
         if ("discover".equals(name)) {
 
             // insert detail fragment into detail container
-            f = new Profiles();
+            f = new Cards();
             setTitle("Discover");
 
         }
@@ -383,6 +391,13 @@ public class Content extends AppCompatActivity
             // insert detail fragment into detail container
             f = new Albums();
             setTitle("Manage My photos");
+
+        }
+        if ("kamasutra".equals(name)) {
+
+            // insert detail fragment into detail container
+            f = new Kamasutra();
+            setTitle("Sex Positions");
 
         }
 
